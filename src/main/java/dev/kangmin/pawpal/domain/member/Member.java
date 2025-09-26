@@ -1,0 +1,63 @@
+package dev.kangmin.pawpal.domain.member;
+
+import dev.kangmin.pawpal.domain.board.Board;
+import dev.kangmin.pawpal.domain.comment.Comment;
+import dev.kangmin.pawpal.domain.dog.Dog;
+import dev.kangmin.pawpal.domain.enums.MemberRole;
+import dev.kangmin.pawpal.domain.mylike.MyLike;
+import jakarta.persistence.*;
+import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+
+import java.util.Date;
+import java.util.List;
+
+import static jakarta.persistence.EnumType.*;
+import static jakarta.persistence.GenerationType.*;
+import static lombok.AccessLevel.*;
+
+@Entity
+@Builder
+@Getter
+@NoArgsConstructor(access = PROTECTED)
+@AllArgsConstructor
+public class Member {
+
+    @Id
+    @GeneratedValue(strategy = IDENTITY)
+    private Long memberId;
+
+    private String name;
+    private String email;
+
+    private String password;
+    private String identify;
+    private String provider;
+    private String providerId;
+
+    @Enumerated(STRING)
+    private MemberRole role;
+
+    @CreatedDate
+    private Date createAt;
+    @LastModifiedDate
+    private Date updateAt;
+
+
+    @OneToMany(mappedBy = "member")
+    private List<Dog> dogList;
+
+    @OneToMany(mappedBy = "member")
+    private List<Board> boardList;
+
+    @OneToMany(mappedBy = "member")
+    private List<MyLike> myLikeList;
+
+    @OneToMany(mappedBy = "member")
+    private List<Comment> commentList;
+
+    //of : entity -> dto
+
+
+}
