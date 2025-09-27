@@ -2,9 +2,8 @@ package dev.kangmin.pawpal.golbal.jwt;
 
 
 import dev.kangmin.pawpal.domain.member.Member;
-import dev.kangmin.pawpal.domain.member.MemberRepository;
+import dev.kangmin.pawpal.domain.member.repository.MemberRepository;
 import dev.kangmin.pawpal.golbal.jwt.dto.JwtToken;
-import io.jsonwebtoken.Jwt;
 import io.jsonwebtoken.Jwts;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;

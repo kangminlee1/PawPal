@@ -15,10 +15,11 @@ public enum ErrorCode {
     OAUTH_AUTHENTICATION_FAILED("OAuth 인증에 실패했습니다."),
 
     //회원
-    MEMBER_IS_NOT_EXISTS("사용자가 존재하지 않습니다.");
+    MEMBER_IS_NOT_EXISTS("사용자가 존재하지 않습니다."),
 
 
     //강아지
+    DOG_IS_NOT_EXISTS("귀하의 강아지 정보를 등록하시지 않았습니다.");
 
     private final String errorMessage;
     ErrorCode(String errorMessage){

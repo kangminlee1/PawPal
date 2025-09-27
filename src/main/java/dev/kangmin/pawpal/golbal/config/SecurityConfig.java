@@ -1,6 +1,6 @@
 package dev.kangmin.pawpal.golbal.config;
 
-import dev.kangmin.pawpal.domain.member.MemberRepository;
+import dev.kangmin.pawpal.domain.member.repository.MemberRepository;
 import dev.kangmin.pawpal.golbal.jwt.JwtUtil;
 import dev.kangmin.pawpal.golbal.jwt.filter.JwtAuthenticationFilter;
 import dev.kangmin.pawpal.golbal.jwt.filter.JwtAuthorizationFilter;

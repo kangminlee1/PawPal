@@ -1,5 +1,7 @@
 package dev.kangmin.pawpal.domain.dog;
 
+import dev.kangmin.pawpal.domain.dog.dto.DogInfoDto;
+import dev.kangmin.pawpal.domain.enums.ExistStatus;
 import dev.kangmin.pawpal.domain.foodrecord.FoodRecord;
 import dev.kangmin.pawpal.domain.healthrecord.HealthRecord;
 import dev.kangmin.pawpal.domain.member.Member;
@@ -28,6 +30,9 @@ public class Dog {
     private int age;
     private String image;
 
+    @Enumerated(EnumType.STRING)
+    private ExistStatus existStatus;
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "memberId")
@@ -41,4 +46,27 @@ public class Dog {
 
     @OneToMany(mappedBy = "dog")
     private List<FoodRecord> foodRecordList;
+
+    public void modifyInfo(DogInfoDto dogInfoDto) {
+        this.name = dogInfoDto.getName();
+        this.breed = dogInfoDto.getBreed();
+        this.isNeutralizing = dogInfoDto.isNeutralizing();
+        this.age = dogInfoDto.getAge();
+        this.image = dogInfoDto.getImage();
+    }
+
+    public void change(ExistStatus existStatus) {
+        this.existStatus = existStatus;
+    }
+
+
+    public static DogInfoDto of(Dog dog) {
+        return DogInfoDto.builder()
+                .breed(dog.breed)
+                .age(dog.age)
+                .image(dog.image)
+                .isNeutralizing(dog.isNeutralizing)
+                .name(dog.name)
+                .build();
+    }
 }

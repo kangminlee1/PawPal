@@ -1,7 +1,7 @@
 package dev.kangmin.pawpal.golbal.security;
 
 import dev.kangmin.pawpal.domain.member.Member;
-import dev.kangmin.pawpal.domain.member.MemberRepository;
+import dev.kangmin.pawpal.domain.member.repository.MemberRepository;
 import dev.kangmin.pawpal.golbal.error.exception.CustomException;
 import dev.kangmin.pawpal.golbal.error.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;

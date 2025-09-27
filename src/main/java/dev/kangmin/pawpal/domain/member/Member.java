@@ -3,7 +3,9 @@ package dev.kangmin.pawpal.domain.member;
 import dev.kangmin.pawpal.domain.board.Board;
 import dev.kangmin.pawpal.domain.comment.Comment;
 import dev.kangmin.pawpal.domain.dog.Dog;
+import dev.kangmin.pawpal.domain.enums.ExistStatus;
 import dev.kangmin.pawpal.domain.enums.MemberRole;
+import dev.kangmin.pawpal.domain.member.dto.ModifyMemberDto;
 import dev.kangmin.pawpal.domain.mylike.MyLike;
 import jakarta.persistence.*;
 import lombok.*;
@@ -39,6 +41,9 @@ public class Member {
     @Enumerated(STRING)
     private MemberRole role;
 
+    @Enumerated(STRING)
+    private ExistStatus existStatus;
+
     @CreatedDate
     private Date createAt;
     @LastModifiedDate
@@ -56,6 +61,18 @@ public class Member {
 
     @OneToMany(mappedBy = "member")
     private List<Comment> commentList;
+
+
+    //dirty checking
+    public void modifyMember(String name, String email, String password) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+    }
+
+    public void changeStatus(ExistStatus status) {
+        this.existStatus = status;
+    }
 
     //of : entity -> dto
 
