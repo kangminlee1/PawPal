@@ -11,6 +11,7 @@ import java.util.Date;
 @Builder
 public class HealthInquiryDto {
 
+    private Long dogId;
     private Long healthId;
     private String dogName;
     private String content;
@@ -18,6 +19,7 @@ public class HealthInquiryDto {
 
     public static HealthInquiryDto of(HealthRecord healthRecord) {
         return HealthInquiryDto.builder()
+                .dogId(healthRecord.getDog().getDogId())
                 .healthId(healthRecord.getHealthRecordId())
                 .content(healthRecord.getContent())
                 .dogName(healthRecord.getDog().getName())

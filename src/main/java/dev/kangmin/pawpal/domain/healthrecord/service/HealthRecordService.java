@@ -44,6 +44,7 @@ public class HealthRecordService {
 
         healthRecordRepository.save(healthRecord);
     }
+    //사용자가 바로 건강 검진 탭으로 넘어가는 형식으로 결정
 
     //내 강아지의 건강 검진 정보 찾기
     public HealthRecord findMyDogHealthRecordByEmailAndDogIdAndHealthRecordId(String email, Long dogId, Long healthId) {
@@ -64,9 +65,25 @@ public class HealthRecordService {
     }
 
     //건강 검진 목록 조회
-    public List<HealthInquiryDto> getMyDogHealthInquiry(String email, Long dogId) {
-        List<HealthRecord> findHealthRecordList = healthRecordRepository.findByMemberEmailAndDogId(email, dogId);
+    public List<HealthInquiryDto> getMyDogHealthInquiry(String email) {
+        List<HealthRecord> findHealthRecordList = healthRecordRepository.findByMemberEmail(email);
 
+        return findHealthRecordList.stream()
+                .map(HealthInquiryDto::of)
+                .toList();
+    }
+
+    // 건강검진 날짜별 조회
+    public List<HealthInquiryDto> getMyDogHealthInquiryOrderByCreateDate(String email, boolean sortBy){
+        List<HealthRecord> findHealthRecordList = healthRecordRepository.findByMemberEmailOrderByCreateDate(email, sortBy);
+        return findHealthRecordList.stream()
+                .map(HealthInquiryDto::of)
+                .toList();
+    }
+
+    //건강 검진 강아지(이름으로 찾자) 별 조회
+    public List<HealthInquiryDto> getMyDogHealthInquiryByName(String email, String dogName) {
+        List<HealthRecord> findHealthRecordList = healthRecordRepository.findByMemberEmailAndDogName(email, dogName);
         return findHealthRecordList.stream()
                 .map(HealthInquiryDto::of)
                 .toList();

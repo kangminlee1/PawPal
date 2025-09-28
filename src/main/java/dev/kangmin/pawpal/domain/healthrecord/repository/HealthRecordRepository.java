@@ -13,5 +13,9 @@ public interface HealthRecordRepository extends JpaRepository<HealthRecord, Long
     Optional<HealthRecord> findByMemberEmailAndDogIdAndHealthRecordId(String email, Long dogId, Long healthRecordId);
     Optional<HealthRecord> findByMemberEmailAndHealthRecordId(String email, Long healthRecordId);
 
-    List<HealthRecord> findByMemberEmailAndDogId(String email, Long dogId);
+    List<HealthRecord> findByMemberEmail(String email);
+
+    List<HealthRecord> findByMemberEmailOrderByCreateDate(String email, boolean sortBy);
+
+    List<HealthRecord> findByMemberEmailAndDogName(String email, String dogName);
 }
