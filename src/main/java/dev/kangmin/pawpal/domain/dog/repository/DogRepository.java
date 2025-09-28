@@ -13,7 +13,13 @@ public interface DogRepository extends JpaRepository<Dog, Long> {
 
     Optional<Dog> findByMember(Member member);
 
-    List<Dog> findByMemberEmailAndBreed(String email, String breed);
+    Optional<Dog> findByDogId(Long dogId);
+
+    Optional<Dog> findByMemberEmailAndDogId(String email, Long dogId);
+
+    List<Dog> findByMemberEmail(String email);
+
+    List<Dog>findByMemberEmailAndBreed(String email, String breed);
 
     List<Dog> findByMemberEmailAndSortBy(String email, boolean sortBy);
 }

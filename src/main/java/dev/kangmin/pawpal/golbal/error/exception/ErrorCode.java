@@ -19,7 +19,11 @@ public enum ErrorCode {
 
 
     //강아지
-    DOG_IS_NOT_EXISTS("귀하의 강아지 정보를 등록하시지 않았습니다.");
+    DOG_IS_NOT_EXISTS("귀하의 강아지가 존재하지 않습니다."),
+
+
+    //강아지 건강 검진
+    HEALTH_INFO_IS_NOT_EXISTS("건강검진 기록이 없습니다.");
 
     private final String errorMessage;
     ErrorCode(String errorMessage){

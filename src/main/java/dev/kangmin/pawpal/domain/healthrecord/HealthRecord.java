@@ -1,6 +1,8 @@
 package dev.kangmin.pawpal.domain.healthrecord;
 
 import dev.kangmin.pawpal.domain.dog.Dog;
+import dev.kangmin.pawpal.domain.healthrecord.dto.HealthInfoDto;
+import dev.kangmin.pawpal.domain.healthrecord.dto.HealthInquiryDto;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -19,9 +21,10 @@ public class HealthRecord {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long healthRecordId;
 
-    private int weight;
-    private int height;
+    private double weight;
+    private double height;
 
+    @Column(columnDefinition = "TEXT")
     private String content;
 
     @CreatedDate
@@ -32,4 +35,12 @@ public class HealthRecord {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dogId")
     private Dog dog;
+
+    public void modifiedHealthInfo(HealthInfoDto healthInfoDto) {
+        this.content = healthInfoDto.getContent();
+        this.weight = healthInfoDto.getWeight();
+        this.height = healthInfoDto.getHeight();
+    }
+
+
 }

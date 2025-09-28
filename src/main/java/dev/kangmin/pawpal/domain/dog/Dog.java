@@ -1,6 +1,7 @@
 package dev.kangmin.pawpal.domain.dog;
 
 import dev.kangmin.pawpal.domain.dog.dto.DogInfoDto;
+import dev.kangmin.pawpal.domain.dog.dto.DogInquiryDto;
 import dev.kangmin.pawpal.domain.enums.ExistStatus;
 import dev.kangmin.pawpal.domain.foodrecord.FoodRecord;
 import dev.kangmin.pawpal.domain.healthrecord.HealthRecord;
@@ -60,12 +61,11 @@ public class Dog {
     }
 
 
-    public static DogInfoDto of(Dog dog) {
-        return DogInfoDto.builder()
+    public static DogInquiryDto of(Dog dog) {
+        return DogInquiryDto.builder()
+                .dogId(dog.dogId)
                 .breed(dog.breed)
                 .age(dog.age)
-                .image(dog.image)
-                .isNeutralizing(dog.isNeutralizing)
                 .name(dog.name)
                 .build();
     }
