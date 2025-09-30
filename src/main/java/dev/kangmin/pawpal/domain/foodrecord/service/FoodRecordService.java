@@ -74,7 +74,9 @@ public class FoodRecordService {
 
 
     //사료 간식 세부 정보
-
+    public FoodDetailDto getMyDodFoodDetail(String email, Long dogId, Long foodRecordId) {
+        return foodRecordRepository.findByMemberEmailAndDogIdAndFoodRecordId(email, dogId, foodRecordId);
+    }
 
 
 
