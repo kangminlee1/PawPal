@@ -101,8 +101,11 @@ public class SecurityConfig {
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
-                .addFilterBefore(new JwtAuthenticationFilter(authenticationManager(), jwtUtil(), refreshTokenService), UsernamePasswordAuthenticationFilter.class)// 사용자 인증
-                .addFilterBefore(new JwtAuthorizationFilter(jwtUtil(), authDetailsService), UsernamePasswordAuthenticationFilter.class)// 사용자 권한 부여
+//                .addFilterBefore(new JwtAuthenticationFilter(authenticationManager(), jwtUtil(), refreshTokenService), UsernamePasswordAuthenticationFilter.class)// 사용자 인증
+//                .addFilterBefore(new JwtAuthorizationFilter(jwtUtil(), authDetailsService), UsernamePasswordAuthenticationFilter.class)// 사용자 권한 부여
+                .addFilter(new JwtAuthenticationFilter(authenticationManager(), jwtUtil(), refreshTokenService))// 사용자 인증
+                .addFilter(new JwtAuthorizationFilter(authenticationManager(), jwtUtil(), authDetailsService))// 사용자 권한 부여
+
 
                 .oauth2Login(login -> login
                         .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig

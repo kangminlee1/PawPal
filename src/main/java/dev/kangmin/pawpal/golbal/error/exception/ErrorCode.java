@@ -23,7 +23,11 @@ public enum ErrorCode {
 
 
     //강아지 건강 검진
-    HEALTH_INFO_IS_NOT_EXISTS("건강검진 기록이 없습니다.");
+    HEALTH_INFO_IS_NOT_EXISTS("건강검진 기록이 없습니다."),
+
+    //사료/간식
+    FOOD_INFO_IS_NOT_EXISTS("샤료/간식 정보가 없습니다.");
+
 
     private final String errorMessage;
     ErrorCode(String errorMessage){

@@ -10,6 +10,7 @@ import dev.kangmin.pawpal.golbal.error.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +24,7 @@ public class MemberService {
      * -> 단, 생성 전 존재여부 확인 후 등록해야함
      * @param generateDto
      */
+    @Transactional
     public void createMember(GenerateDto generateDto) {
 
         Member newMember = Member.builder()
@@ -43,6 +45,7 @@ public class MemberService {
     }
 
     //사용자 정보 수정
+    @Transactional
     public void modifiedMember(ModifyMemberDto modifyMemberDto, String email) {
 
         //사용자 본인 검증
@@ -55,6 +58,7 @@ public class MemberService {
     }
 
     //회원 탈퇴
+    @Transactional
     public void deletedMember(String email) {
         //본인 검증
         //임시

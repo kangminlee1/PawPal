@@ -13,6 +13,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -28,11 +29,17 @@ import java.util.Collections;
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
     private JwtUtil jwtUtil;
-    private AuthDetailsService authDetailService;
+    private AuthDetailsService authDetailsService;
 
-    public JwtAuthorizationFilter(JwtUtil jwtUtil, AuthDetailsService authDetailService) {
+//    public JwtAuthorizationFilter(JwtUtil jwtUtil, AuthDetailsService authDetailsService) {
+//        this.jwtUtil = jwtUtil;
+//        this.authDetailsService = authDetailsService;
+//    }
+
+    public JwtAuthorizationFilter(AuthenticationManager authenticationManager, JwtUtil jwtUtil, AuthDetailsService authDetailsService) {
+        super(authenticationManager);
         this.jwtUtil = jwtUtil;
-        this.authDetailService = authDetailService;
+        this.authDetailsService = authDetailsService;
     }
 
 

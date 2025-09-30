@@ -30,18 +30,27 @@ public class Member {
     @GeneratedValue(strategy = IDENTITY)
     private Long memberId;
 
+    @Column(nullable = false)
     private String name;
+
+    @Column(nullable = false)
     private String email;
 
+    @Column(nullable = false)
     private String password;
+    @Column(nullable = false)
     private String identify;
+    @Column(nullable = false)
     private String provider;
+    @Column(nullable = false)
     private String providerId;
 
     @Enumerated(STRING)
+    @Column(nullable = false)
     private MemberRole role;
 
     @Enumerated(STRING)
+    @Column(nullable = false)
     private ExistStatus existStatus;
 
     @CreatedDate

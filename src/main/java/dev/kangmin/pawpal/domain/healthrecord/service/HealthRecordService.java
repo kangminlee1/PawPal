@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -31,6 +32,7 @@ public class HealthRecordService {
     private final DogService dogService;
 
     // 건강 검진 결과 등록
+    @Transactional
     public void generateMyDogHealthRecord(String email, HealthInfoDto healthInfoDto) {
 
         //사용자의 강아지가 맞는 지 확인
@@ -58,6 +60,7 @@ public class HealthRecordService {
     }
 
     //건강 검진 결과 수정
+    @Transactional
     public void modifiedMyDogHealthRecord(String email, HealthInfoDto healthInfoDto) {
         HealthRecord newHealthRecord = findMyDogHealthRecordByEmailAndDogIdAndHealthRecordId(email, healthInfoDto.getDogId(), healthInfoDto.getHealthInfoId());
 
