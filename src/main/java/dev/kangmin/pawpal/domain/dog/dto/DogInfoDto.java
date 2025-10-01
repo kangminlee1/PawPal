@@ -1,10 +1,14 @@
 package dev.kangmin.pawpal.domain.dog.dto;
 
 import dev.kangmin.pawpal.domain.dog.Dog;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class DogInfoDto {
 
@@ -15,15 +19,15 @@ public class DogInfoDto {
     private String image;
 
 
-    public Dog toEntity(DogInfoDto dogInfoDto) {
-        return Dog.builder()
-                .name(dogInfoDto.name)
-                .breed(dogInfoDto.breed)
-                .isNeutralizing(dogInfoDto.isNeutralizing)
-                .age(dogInfoDto.age)
-                .image(dogInfoDto.image)
-                .build();
-
-    }
+//    public Dog toEntity(DogInfoDto dogInfoDto) {
+//        return Dog.builder()
+//                .name(dogInfoDto.name)
+//                .breed(dogInfoDto.breed)
+//                .isNeutralizing(dogInfoDto.isNeutralizing)
+//                .age(dogInfoDto.age)
+//                .image(dogInfoDto.image)
+//                .build();
+//
+//    }
 
 }

@@ -29,8 +29,17 @@ public class DogService {
         //사용자 찾아서
         Member member = memberService.findMemberByEmail(email);
 
+        Dog dog = Dog.builder()
+                .name(dogInfoDto.getName())
+                .breed(dogInfoDto.getBreed())
+                .isNeutralizing(dogInfoDto.isNeutralizing())
+                .age(dogInfoDto.getAge())
+                .image(dogInfoDto.getImage())
+                .member(member)
+                .build();
+
         //강아지 정보 저장
-        dogRepository.save(dogInfoDto.toEntity(dogInfoDto));
+        dogRepository.save(dog);
     }
 
     //강아지 정보 수정

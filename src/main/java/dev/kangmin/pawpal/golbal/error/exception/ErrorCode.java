@@ -28,7 +28,11 @@ public enum ErrorCode {
     HEALTH_INFO_IS_NOT_EXISTS("건강검진 기록이 없습니다."),
 
     //사료/간식
-    FOOD_INFO_IS_NOT_EXISTS("샤료/간식 정보가 없습니다.");
+    FOOD_INFO_IS_NOT_EXISTS("샤료/간식 정보가 없습니다."),
+
+
+    //게시판(커뮤니티)
+    BOARD_IS_NOT_EXISTS("해당 게시글이 존재하지 않습니다.");
 
 
     private final String errorMessage;

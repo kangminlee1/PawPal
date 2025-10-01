@@ -1,5 +1,7 @@
 package dev.kangmin.pawpal.domain.board;
 
+import dev.kangmin.pawpal.domain.board.dto.GenerateBoardDto;
+import dev.kangmin.pawpal.domain.board.dto.ModifyBoardDto;
 import dev.kangmin.pawpal.domain.comment.Comment;
 import dev.kangmin.pawpal.domain.enums.ExistStatus;
 import dev.kangmin.pawpal.domain.member.Member;
@@ -50,4 +52,13 @@ public class Board {
     @OneToMany(mappedBy = "board")
     private List<MyLike> myLikeList;
 
+
+    public void modifyBoard(ModifyBoardDto modifyBoardDto) {
+        this.title = modifyBoardDto.getTitle();
+        this.content = modifyBoardDto.getContent();
+    }
+
+    public void deleteBoard() {
+        this.existStatus = ExistStatus.DELETED;
+    }
 }
