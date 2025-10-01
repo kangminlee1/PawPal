@@ -1,6 +1,7 @@
 package dev.kangmin.pawpal.domain.foodrecord.dto;
 
 import dev.kangmin.pawpal.domain.enums.FoodType;
+import dev.kangmin.pawpal.domain.foodrecord.FoodRecord;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -28,5 +29,20 @@ public class FoodDetailDto {
     private int preference;
     private int amount;
     private Date createDate;
+
+    //entity -> dto
+    public static FoodDetailDto of(FoodRecord foodRecord) {
+        return FoodDetailDto.builder()
+                .foodRecordId(foodRecord.getFoodRecordId())
+                .dogId(foodRecord.getDog().getDogId())
+                .memberName(foodRecord.getDog().getMember().getName())
+                .dogName(foodRecord.getDog().getName())
+                .foodName(foodRecord.getName())
+                .type(foodRecord.getType())
+                .amount(foodRecord.getAmount())
+                .preference(foodRecord.getPreference())
+                .createDate(foodRecord.getCreateDate())
+                .build();
+    }
 
 }

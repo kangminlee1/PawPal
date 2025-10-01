@@ -5,15 +5,15 @@ import dev.kangmin.pawpal.domain.dog.service.DogService;
 import dev.kangmin.pawpal.domain.vaccinationrecord.VaccinationRecord;
 import dev.kangmin.pawpal.domain.vaccinationrecord.dto.GenerateVaccinationDto;
 import dev.kangmin.pawpal.domain.vaccinationrecord.dto.ModifyVaccineDto;
+import dev.kangmin.pawpal.domain.vaccinationrecord.dto.VaccineDetailDto;
 import dev.kangmin.pawpal.domain.vaccinationrecord.dto.VaccineInfoDto;
 import dev.kangmin.pawpal.domain.vaccinationrecord.repository.VaccinationRecordRepository;
 import dev.kangmin.pawpal.golbal.error.exception.CustomException;
-import dev.kangmin.pawpal.golbal.error.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 import static dev.kangmin.pawpal.golbal.error.exception.ErrorCode.VACCINE_IS_NOT_EXISTS;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
@@ -60,4 +60,10 @@ public class VaccinationRecordService {
         return vaccinationRecordRepository.findVaccinationRecordListByMemberEmailAndDogId(email, dogId);
     }
 
+    //세부정보
+    public VaccineDetailDto getMyDogVaccinationRecordDetail(String email, Long dogId, Long vaccineId) {
+        return Optional.ofNullable(vaccinationRecordRepository.findByMemberEmailAndDogIdAndVaccinationRecordId(email, dogId, vaccineId) )
+                .map(VaccineDetailDto::of)
+                .orElseThrow();
+    }
 }

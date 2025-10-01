@@ -66,7 +66,7 @@ public class DogService {
     //나의 강아지 전체  목록
     public List<DogInquiryDto> getMyDogsInfo(String email) {
         return dogRepository.findByMemberEmail(email).stream()
-                .map(Dog::of)
+                .map(DogInquiryDto::of)
                 .toList();
     }
 
@@ -76,7 +76,7 @@ public class DogService {
 
         //원하는 견종의 DTO 리스트 반환
         return dogRepository.findByMemberEmailAndBreed(email, breed).stream()
-                .map(Dog::of)
+                .map(DogInquiryDto::of)
                 .toList();
     }
 
@@ -85,14 +85,14 @@ public class DogService {
     public List<DogInquiryDto> getMyDogInfoOrderByAge(String email, boolean sortBy) {
         //사용자의 강아지 정보 나이 순 정렬
         return dogRepository.findByMemberEmailAndSortBy(email, sortBy).stream()
-                .map(Dog::of)
+                .map(DogInquiryDto::of)
                 .toList();
     }
 
     //나의 강아지 세부 사항
     public DogDetailDto getMyDogDetailInfo(String email, Long dogId) {
         //강아지 세부 정보 조회
-        return DogDetailDto.of(findDogByMemberEmailAndDogId(email, dogId) );
+        return DogDetailDto.of(findDogByMemberEmailAndDogId(email, dogId));
     }
 
 }

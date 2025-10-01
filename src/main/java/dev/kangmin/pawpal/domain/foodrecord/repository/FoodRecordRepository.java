@@ -15,11 +15,11 @@ public interface FoodRecordRepository extends JpaRepository<FoodRecord, Long> {
 
     Optional<FoodRecord> findByFoodRecordId(Long foodRecordId);
 
-    FoodDetailDto findByMemberEmailAndDogIdAndFoodRecordId(String email, Long dogId, Long foodRecordId);
+    FoodRecord findByMemberEmailAndDogIdAndFoodRecordId(String email, Long dogId, Long foodRecordId);
 
-    List<FoodInfoDto> findFoodInfoDtoListByMemberEmailAndDogId(String email, Long dogId);
+    List<FoodRecord> findFoodInfoDtoListByMemberEmailAndDogId(String email, Long dogId);
 
-    List<FoodInfoDto> findFoodInfoDtoListByMemberEmailAndDogIdOrderByPreference(String email, Long dogId);
+    List<FoodRecord> findFoodInfoDtoListByMemberEmailAndDogIdOrderByPreference(String email, Long dogId);
 
     List<FoodRecord> findFoodListByDogId(Long dogId);
 }

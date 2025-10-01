@@ -1,6 +1,7 @@
 package dev.kangmin.pawpal.domain.vaccinationrecord.repository;
 
 import dev.kangmin.pawpal.domain.vaccinationrecord.VaccinationRecord;
+import dev.kangmin.pawpal.domain.vaccinationrecord.dto.VaccineDetailDto;
 import dev.kangmin.pawpal.domain.vaccinationrecord.dto.VaccineInfoDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -13,4 +14,6 @@ public interface VaccinationRecordRepository extends JpaRepository<VaccinationRe
     Optional<VaccinationRecord> findByVaccinationRecordIdAndMemberEmail(Long vaccinationRecordId, String email);
 
     List<VaccineInfoDto> findVaccinationRecordListByMemberEmailAndDogId(String email, Long dogId);
+
+    VaccinationRecord findByMemberEmailAndDogIdAndVaccinationRecordId(String email, Long dogId, Long vaccinationRecordId);
 }

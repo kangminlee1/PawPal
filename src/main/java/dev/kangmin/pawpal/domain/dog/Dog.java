@@ -60,13 +60,4 @@ public class Dog {
         this.existStatus = existStatus;
     }
 
-
-    public static DogInquiryDto of(Dog dog) {
-        return DogInquiryDto.builder()
-                .dogId(dog.dogId)
-                .breed(dog.breed)
-                .age(dog.age)
-                .name(dog.name)
-                .build();
-    }
 }

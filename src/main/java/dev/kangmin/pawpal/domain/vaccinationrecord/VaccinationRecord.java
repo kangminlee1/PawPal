@@ -3,6 +3,7 @@ package dev.kangmin.pawpal.domain.vaccinationrecord;
 import dev.kangmin.pawpal.domain.dog.Dog;
 import dev.kangmin.pawpal.domain.enums.VaccineType;
 import dev.kangmin.pawpal.domain.vaccinationrecord.dto.ModifyVaccineDto;
+import dev.kangmin.pawpal.domain.vaccinationrecord.dto.VaccineDetailDto;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -39,4 +40,6 @@ public class VaccinationRecord {
         this.vaccineType = modifyVaccineDto.getVaccineType();
         this.doseNum = modifyVaccineDto.getNum();
     }
+
+
 }

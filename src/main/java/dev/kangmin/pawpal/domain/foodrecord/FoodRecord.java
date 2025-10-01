@@ -2,6 +2,7 @@ package dev.kangmin.pawpal.domain.foodrecord;
 
 import dev.kangmin.pawpal.domain.dog.Dog;
 import dev.kangmin.pawpal.domain.enums.FoodType;
+import dev.kangmin.pawpal.domain.foodrecord.dto.FoodDetailDto;
 import dev.kangmin.pawpal.domain.foodrecord.dto.ModifyFoodDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
@@ -57,4 +58,6 @@ public class FoodRecord {
         this.preference = modifyFoodDto.getPreference();
         this.name = modifyFoodDto.getName();
     }
+
+
 }

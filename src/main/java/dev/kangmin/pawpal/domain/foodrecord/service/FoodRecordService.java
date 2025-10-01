@@ -11,12 +11,15 @@ import dev.kangmin.pawpal.domain.foodrecord.dto.stats.TopWorstFoodDto;
 import dev.kangmin.pawpal.domain.foodrecord.repository.FoodRecordRepository;
 import dev.kangmin.pawpal.domain.member.service.MemberService;
 import dev.kangmin.pawpal.golbal.error.exception.CustomException;
+import dev.kangmin.pawpal.golbal.error.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 import static dev.kangmin.pawpal.golbal.error.exception.ErrorCode.FOOD_INFO_IS_NOT_EXISTS;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
@@ -64,18 +67,24 @@ public class FoodRecordService {
     //-------------사료/간식 정보 조회
     //해당 강아지의 사료/간식 전체 정보 조회
     public List<FoodInfoDto> getMyDogFoodInfoList(String email, Long dogId) {
-        return foodRecordRepository.findFoodInfoDtoListByMemberEmailAndDogId(email, dogId);
+        return foodRecordRepository.findFoodInfoDtoListByMemberEmailAndDogId(email, dogId).stream()
+                .map(FoodInfoDto::of)
+                .toList();
     }
 
     //선호도 순
     public List<FoodInfoDto> getMyDogFoodInfoListOrderByPreference(String email, Long dogId) {
-        return foodRecordRepository.findFoodInfoDtoListByMemberEmailAndDogIdOrderByPreference(email, dogId);
+        return foodRecordRepository.findFoodInfoDtoListByMemberEmailAndDogIdOrderByPreference(email, dogId).stream()
+                .map(FoodInfoDto::of)
+                .toList();
     }
 
 
     //사료 간식 세부 정보
     public FoodDetailDto getMyDodFoodDetail(String email, Long dogId, Long foodRecordId) {
-        return foodRecordRepository.findByMemberEmailAndDogIdAndFoodRecordId(email, dogId, foodRecordId);
+        return Optional.ofNullable(foodRecordRepository.findByMemberEmailAndDogIdAndFoodRecordId(email, dogId, foodRecordId))
+                .map(FoodDetailDto::of)
+                .orElseThrow(() -> new CustomException(BAD_REQUEST, ErrorCode.FOOD_INFO_IS_NOT_EXISTS));
     }
 
 
