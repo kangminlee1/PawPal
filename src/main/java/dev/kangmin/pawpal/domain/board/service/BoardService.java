@@ -9,8 +9,8 @@ import dev.kangmin.pawpal.domain.board.repository.BoardRepository;
 import dev.kangmin.pawpal.domain.enums.ExistStatus;
 import dev.kangmin.pawpal.domain.member.Member;
 import dev.kangmin.pawpal.domain.member.service.MemberService;
-import dev.kangmin.pawpal.golbal.error.exception.CustomException;
-import dev.kangmin.pawpal.golbal.error.exception.ErrorCode;
+import dev.kangmin.pawpal.global.error.exception.CustomException;
+import dev.kangmin.pawpal.global.error.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,7 +20,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor

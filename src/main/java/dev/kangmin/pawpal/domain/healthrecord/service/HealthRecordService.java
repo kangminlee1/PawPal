@@ -7,19 +7,16 @@ import dev.kangmin.pawpal.domain.healthrecord.dto.HealthDetailDto;
 import dev.kangmin.pawpal.domain.healthrecord.dto.HealthInfoDto;
 import dev.kangmin.pawpal.domain.healthrecord.dto.HealthInquiryDto;
 import dev.kangmin.pawpal.domain.healthrecord.repository.HealthRecordRepository;
-import dev.kangmin.pawpal.domain.member.Member;
 import dev.kangmin.pawpal.domain.member.service.MemberService;
-import dev.kangmin.pawpal.golbal.error.exception.CustomException;
-import dev.kangmin.pawpal.golbal.error.exception.ErrorCode;
+import dev.kangmin.pawpal.global.error.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static dev.kangmin.pawpal.golbal.error.exception.ErrorCode.*;
+import static dev.kangmin.pawpal.global.error.exception.ErrorCode.*;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 @Service

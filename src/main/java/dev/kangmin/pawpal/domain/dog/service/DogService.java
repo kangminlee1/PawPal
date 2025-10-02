@@ -8,14 +8,13 @@ import dev.kangmin.pawpal.domain.dog.repository.DogRepository;
 import dev.kangmin.pawpal.domain.enums.ExistStatus;
 import dev.kangmin.pawpal.domain.member.Member;
 import dev.kangmin.pawpal.domain.member.service.MemberService;
-import dev.kangmin.pawpal.golbal.error.exception.CustomException;
-import dev.kangmin.pawpal.golbal.error.exception.ErrorCode;
+import dev.kangmin.pawpal.global.error.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static dev.kangmin.pawpal.golbal.error.exception.ErrorCode.*;
+import static dev.kangmin.pawpal.global.error.exception.ErrorCode.*;
 
 @Service
 @RequiredArgsConstructor

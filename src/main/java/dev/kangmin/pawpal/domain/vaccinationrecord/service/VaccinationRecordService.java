@@ -8,14 +8,14 @@ import dev.kangmin.pawpal.domain.vaccinationrecord.dto.ModifyVaccineDto;
 import dev.kangmin.pawpal.domain.vaccinationrecord.dto.VaccineDetailDto;
 import dev.kangmin.pawpal.domain.vaccinationrecord.dto.VaccineInfoDto;
 import dev.kangmin.pawpal.domain.vaccinationrecord.repository.VaccinationRecordRepository;
-import dev.kangmin.pawpal.golbal.error.exception.CustomException;
+import dev.kangmin.pawpal.global.error.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
-import static dev.kangmin.pawpal.golbal.error.exception.ErrorCode.VACCINE_IS_NOT_EXISTS;
+import static dev.kangmin.pawpal.global.error.exception.ErrorCode.VACCINE_IS_NOT_EXISTS;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 @Service

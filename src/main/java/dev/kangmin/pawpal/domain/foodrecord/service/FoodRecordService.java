@@ -10,10 +10,9 @@ import dev.kangmin.pawpal.domain.foodrecord.dto.stats.FoodTypeNameDto;
 import dev.kangmin.pawpal.domain.foodrecord.dto.stats.TopWorstFoodDto;
 import dev.kangmin.pawpal.domain.foodrecord.repository.FoodRecordRepository;
 import dev.kangmin.pawpal.domain.member.service.MemberService;
-import dev.kangmin.pawpal.golbal.error.exception.CustomException;
-import dev.kangmin.pawpal.golbal.error.exception.ErrorCode;
+import dev.kangmin.pawpal.global.error.exception.CustomException;
+import dev.kangmin.pawpal.global.error.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,7 +20,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
-import static dev.kangmin.pawpal.golbal.error.exception.ErrorCode.FOOD_INFO_IS_NOT_EXISTS;
+import static dev.kangmin.pawpal.global.error.exception.ErrorCode.FOOD_INFO_IS_NOT_EXISTS;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 @Service
