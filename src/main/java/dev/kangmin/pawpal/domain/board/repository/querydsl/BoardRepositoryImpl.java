@@ -1,16 +1,26 @@
 package dev.kangmin.pawpal.domain.board.repository.querydsl;
 
+import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.CaseBuilder;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import dev.kangmin.pawpal.domain.board.Board;
 import dev.kangmin.pawpal.domain.board.dto.BoardInfoDto;
 import dev.kangmin.pawpal.domain.board.repository.BoardRepository;
+import dev.kangmin.pawpal.domain.enums.ExistStatus;
 import dev.kangmin.pawpal.domain.member.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
+import java.util.List;
+
+import static dev.kangmin.pawpal.domain.board.QBoard.board;
+import static dev.kangmin.pawpal.domain.mylike.QMyLike.myLike;
 
 @Repository
 @RequiredArgsConstructor
@@ -18,9 +28,39 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
 
+    //게시글 전체 조회
     @Override
     public Page<BoardInfoDto> findAllBoardPosts(Pageable pageable) {
-        return null;
+
+        List<BoardInfoDto> boardInfoDtoList = queryFactory
+                .select(Projections.constructor(BoardInfoDto.class,
+                        board.boardId,
+                        board.title,
+                        board.createDate,
+                        board.viewCount,
+                        board.member.name,
+                        Expressions.numberTemplate(Long.class,
+                                        "sum(case when {0} = {1} then 1 else 0 end",
+                                        myLike.existStatus,
+                                        ExistStatus.EXISTS)
+                                .coalesce(0L)
+                                .intValue()
+                ))
+                .from(board)
+                .leftJoin(myLike).on(myLike.board.eq(board))
+                .where(board.existStatus.eq(ExistStatus.EXISTS))
+                .groupBy(board.boardId)
+
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        JPAQuery<Long> countQuery = queryFactory
+                .select(board.count())
+                .from(board)
+                .where(board.existStatus.eq(ExistStatus.EXISTS));
+
+        return PageableExecutionUtils.getPage(boardInfoDtoList, pageable, countQuery::fetchOne);
     }
 
     @Override

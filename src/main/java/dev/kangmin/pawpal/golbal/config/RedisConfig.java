@@ -15,10 +15,10 @@ import java.time.Duration;
 @Slf4j
 public class RedisConfig {
 
-    @Value("${spring.data.redis.host")
+    @Value("${spring.data.redis.host}")
     private String host;
 
-    @Value("${spring.data.redis.port")
+    @Value("${spring.data.redis.port}")
     private int port;
 
     //host, port, timeout 설정

@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -17,6 +18,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 public class Comment {
 
     @Id
@@ -47,5 +49,6 @@ public class Comment {
     private Comment parent;
 
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
+    @Builder.Default
     private List<Comment> children = new ArrayList<>();
 }
