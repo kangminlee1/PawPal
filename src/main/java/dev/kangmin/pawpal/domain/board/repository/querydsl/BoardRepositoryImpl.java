@@ -37,4 +37,21 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
     public Page<BoardInfoDto> findBoardOrderByViewCount(Pageable pageable) {
         return null;
     }
+
+
+    //검색
+    @Override
+    public Page<BoardInfoDto> findByTitle(Pageable pageable, String title) {
+        return null;
+    }
+
+    @Override
+    public Page<BoardInfoDto> findByKeyword(Pageable pageable, String keyword) {
+        return null;
+    }
+
+    @Override
+    public Page<BoardInfoDto> findByContent(Pageable pageable, String content) {
+        return null;
+    }
 }

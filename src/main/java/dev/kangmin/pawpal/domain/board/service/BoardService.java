@@ -79,9 +79,37 @@ public class BoardService {
         return boardRepository.findMyBoardByMember(member, pageable);
     }
 
+    /**
+     * 공백 제거
+     * @param title
+     * @return
+     */
+    public String removeTitleSpace(String title) {
+        return title.trim();
+    }
 
     //게시글 필터
     //검색
+    //게시글 제목
+    public Page<BoardInfoDto> getBoardByTitle(int page, int size, String title) {
+        Pageable pageable = PageRequest.of(page, size);
+        title = removeTitleSpace(title);
+        return boardRepository.findByTitle(pageable, title);
+    }
+
+    //게시글 제목 + 내용 (해당 검색어 포함하는 것만)
+    public Page<BoardInfoDto> getBoardByKeyword(int page, int size, String keyword) {
+        keyword = removeTitleSpace(keyword);
+        Pageable pageable = PageRequest.of(page, size);
+        return boardRepository.findByKeyword(pageable, keyword);
+    }
+
+    //게시글 내용 검색
+    public Page<BoardInfoDto> getBoardByContent(int page, int size, String content) {
+        content = removeTitleSpace(content);
+        Pageable pageable = PageRequest.of(page, size);
+        return boardRepository.findByContent(pageable, content);
+    }
 
     //특정 기간(ex) yyyy-mm-dd
     public Page<BoardInfoDto> getBoardOrderByCreateDate(int page, int size, Date startDate, Date endDate) {

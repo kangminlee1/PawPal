@@ -17,4 +17,10 @@ public interface BoardRepositoryCustom {
 
     Page<BoardInfoDto> findBoardOrderByViewCount(Pageable pageable);
 
+    //검색
+    Page<BoardInfoDto> findByTitle(Pageable pageable, String title);
+
+    Page<BoardInfoDto> findByKeyword(Pageable pageable, String keyword);
+
+    Page<BoardInfoDto> findByContent(Pageable pageable, String content);
 }
