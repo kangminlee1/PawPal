@@ -15,6 +15,12 @@ import java.util.Date;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Table(
+        indexes = {
+                @Index(name = "idx_board_existStatus", columnList = "board_id, existStatus"),
+                @Index(name = "idx_board_board", columnList = "member_id, board_id")
+        }
+)// 1. 게시글 별 좋아요 수 조회 빠르게 2. 특정 회원이 특정 게시글 좋아요 눌렀는지 빠르게 조회
 public class MyLike {
 
     @Id
@@ -36,5 +42,9 @@ public class MyLike {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "boardId")
     private Board board;
+
+    public void changed(ExistStatus existStatus){
+        this.existStatus = existStatus;
+    }
 }
 

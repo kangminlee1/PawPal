@@ -32,7 +32,10 @@ public class OAuthSuccessHandler extends SavedRequestAwareAuthenticationSuccessH
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws ServletException, IOException {
         AuthDetails authDetails = (AuthDetails) authentication.getPrincipal();
-        JwtToken jwtToken = jwtUtil.generateJwtToken(authDetails.getUsername());
+
+        //사용자 구분을 위해 memberId 추가
+        JwtToken jwtToken = jwtUtil.generateJwtToken(authDetails.getUsername(), authDetails.getMember().getMemberId());
+
 
         //로그인 성공 시 refreshtoken 저장 (redis)
         refreshTokenService.saveRefreshToken(jwtToken.getJwtRefreshToken(), authDetails.getUsername());

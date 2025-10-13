@@ -16,6 +16,7 @@ import java.util.List;
 @Builder
 public class CommentDto {
 
+    private Long memberId;// 멤버 검증
     private String content;
     private Date createDate;
     private String memberName;

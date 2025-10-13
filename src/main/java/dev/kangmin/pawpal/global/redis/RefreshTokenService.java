@@ -33,7 +33,7 @@ public class RefreshTokenService {
      * @param refreshToken
      */
     @Transactional
-    public void deleteRefreshToken(String refreshToken) {
+    public void removeRefreshToken(String refreshToken) {
         refreshTokenRepository.findRefreshTokenByJwtRefreshToken(refreshToken)
                 .ifPresent(refreshTokenRepository::delete);
     }

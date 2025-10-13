@@ -17,6 +17,8 @@ public interface BoardRepositoryCustom {
 
     Page<BoardInfoDto> findBoardOrderByViewCount(Pageable pageable);
 
+    Page<BoardInfoDto> findBoardOrderByMyLike(Pageable pageable);
+
     //검색
     Page<BoardInfoDto> findByTitle(Pageable pageable, String title);
 

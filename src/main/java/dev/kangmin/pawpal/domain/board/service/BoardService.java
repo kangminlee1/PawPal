@@ -118,6 +118,10 @@ public class BoardService {
     }
 
     //좋아요 순
+    public Page<BoardInfoDto> getBoardOrderByLikeCount(int page, int size){
+        Pageable pageable = PageRequest.of(page, size);
+        return boardRepository.findBoardOrderByMyLike(pageable);
+    }
 
 
     //조회수 순
@@ -126,7 +130,12 @@ public class BoardService {
         return boardRepository.findBoardOrderByViewCount(pageable);
     }
 
-    //세부 조회
+    /**
+     * 게시글 세부 조회
+     * 게시글 id 값 받아서 해당 게시글의 세부 정보 dto 반환
+     * @param boardId
+     * @return
+     */
     public BoardDetailDto getBoardDetail(Long boardId) {
         Board board = findByBoardId(boardId);
         return BoardDetailDto.of(board);
