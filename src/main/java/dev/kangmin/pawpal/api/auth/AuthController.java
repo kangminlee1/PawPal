@@ -1,6 +1,9 @@
-package dev.kangmin.pawpal.api;
+package dev.kangmin.pawpal.api.auth;
 
+import dev.kangmin.pawpal.api.auth.dto.LoginDto;
 import dev.kangmin.pawpal.domain.member.Member;
+import dev.kangmin.pawpal.domain.member.service.MemberService;
+import dev.kangmin.pawpal.global.jwt.dto.JwtToken;
 import dev.kangmin.pawpal.global.redis.AuthService;
 import dev.kangmin.pawpal.global.redis.dto.GetJwtTokenDto;
 import dev.kangmin.pawpal.global.redis.dto.PostRefreshTokenDto;
@@ -18,6 +21,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/auth")
 public class AuthController {
     private final AuthService authService;
+
+//    //일반 사용자 로그인(OAUTH X)
+//    @PostMapping("/login")
+//    public ResponseEntity<JwtToken> login(
+//            @RequestBody LoginDto loginDto){
+//
+//
+//        return ResponseEntity.ok(jwtToken);
+//    }
 
     //로그아웃
     @PostMapping("/logout")

@@ -102,6 +102,11 @@ public class JwtUtil {
                 .get(AUTHORITIES_KEY, String.class);
     }
 
+    /**
+     * 토큰에서 memberId 가져오기
+     * @param token
+     * @return
+     */
     private Long getMemberId(String token) {
         return Jwts.parser()
                 .verifyWith(secretKey)

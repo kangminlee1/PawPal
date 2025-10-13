@@ -60,7 +60,7 @@ public class OAuth2CustomUserService extends DefaultOAuth2UserService {
                 .build();
 
         //만약 사용자 없으면 생성
-        if (memberRepository.existsByEmail(generateDto.getEmail())) {
+        if (!memberRepository.existsByEmail(generateDto.getEmail())) {
             memberService.createMember(generateDto);
         }
 

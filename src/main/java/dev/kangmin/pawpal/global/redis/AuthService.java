@@ -1,13 +1,19 @@
 package dev.kangmin.pawpal.global.redis;
 
+import dev.kangmin.pawpal.api.auth.dto.LoginDto;
 import dev.kangmin.pawpal.domain.member.Member;
 import dev.kangmin.pawpal.global.error.exception.CustomException;
 import dev.kangmin.pawpal.global.error.exception.ErrorCode;
 import dev.kangmin.pawpal.global.jwt.JwtUtil;
+import dev.kangmin.pawpal.global.jwt.dto.JwtToken;
 import dev.kangmin.pawpal.global.redis.dto.GetJwtTokenDto;
 import dev.kangmin.pawpal.global.redis.dto.PostRefreshTokenDto;
+import dev.kangmin.pawpal.global.security.AuthDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +28,32 @@ public class AuthService {
     private final JwtUtil jwtUtil;
     private final RefreshTokenRepository refreshTokenRepository;
     private final RefreshTokenService refreshTokenService;
+    private final AuthenticationManager authenticationManager;
 
+//    /**
+//     * 일반 사용자 로그인
+//     * @param loginDto
+//     * @return
+//     */
+//    public JwtToken login(LoginDto loginDto) {
+//        //1. Authentication 생성
+//        UsernamePasswordAuthenticationToken authenticationToken =
+//                new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword());
+//
+//        //2. 인증 처리
+//        Authentication authentication = authenticationManager.authenticate(authenticationToken);
+//
+//        //3. SecurityContext 에 인증 정보 저장
+//        SecurityContextHolder.getContext().setAuthentication(authentication);
+//
+//        //4. JWT 발급
+//        AuthDetails authDetails = (AuthDetails) authentication.getPrincipal();
+//        JwtToken jwtToken = jwtUtil.generateJwtToken(authDetails.getUsername(), authDetails.getMember().getMemberId());
+//
+//        //5. RefreshToken 저장
+//        refreshTokenService.saveRefreshToken(jwtToken.getJwtRefreshToken(), authDetails.getUsername());
+//        return jwtToken;
+//    }
 
     /**
      * 로그아웃 처리
