@@ -75,7 +75,7 @@ public class BoardService {
         Member member = memberService.findMemberByEmail(email);
 
         Pageable pageable = PageRequest.of(page, size);
-        return boardRepository.findMyBoardByMember(email, pageable);
+        return boardRepository.findMyBoardByMemberEmail(email, pageable);
     }
 
     /**

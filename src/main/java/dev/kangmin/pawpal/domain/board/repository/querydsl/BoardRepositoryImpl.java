@@ -223,13 +223,82 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
         return PageableExecutionUtils.getPage(boardInfoDtoList, pageable, countQuery::fetchOne);
     }
 
+    //제목 + 글 내용에 포함되는것
     @Override
     public Page<BoardInfoDto> findByKeyword(Pageable pageable, String keyword) {
-        return null;
+        List<BoardInfoDto> boardInfoDtoList = queryFactory
+                .select(Projections.constructor(BoardInfoDto.class,
+                        board.boardId,
+                        board.title,
+                        board.createDate,
+                        board.viewCount,
+                        board.member.name,
+                        Expressions.numberTemplate(Long.class,
+                                        "sum(case when {0} = {1} then 1 else 0 end",
+                                        myLike.existStatus,
+                                        ExistStatus.EXISTS)
+                                .coalesce(0L)
+                                .intValue()
+                        )
+                )
+                .from(board)
+                .leftJoin(myLike).on(myLike.board.eq(board))
+                .where(
+                        board.existStatus.eq(ExistStatus.EXISTS),
+                        board.title.containsIgnoreCase(keyword).or(board.content.containsIgnoreCase(keyword))
+                )
+                .groupBy(board.boardId)
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        JPAQuery<Long> countQuery = queryFactory
+                .select(board.count())
+                .from(board)
+                .where(
+                        board.existStatus.eq(ExistStatus.EXISTS),
+                        board.title.containsIgnoreCase(keyword)
+                );
+
+        return PageableExecutionUtils.getPage(boardInfoDtoList, pageable, countQuery::fetchOne);
     }
 
     @Override
     public Page<BoardInfoDto> findByContent(Pageable pageable, String content) {
-        return null;
+
+        List<BoardInfoDto> boardInfoDtoList = queryFactory
+                .select(
+                        Projections.constructor(BoardInfoDto.class,
+                                board.boardId,
+                                board.title,
+                                board.createDate,
+                                board.viewCount,
+                                board.member.name,
+                                Expressions.numberTemplate(Long.class,
+                                        "sum(case when {0} = {1} then 1 else 0 end",
+                                        myLike.existStatus,
+                                        ExistStatus.EXISTS)
+                                )
+                )
+                .from(board)
+                .leftJoin(myLike).on(myLike.board.eq(board))
+                .where(
+                        board.existStatus.eq(ExistStatus.EXISTS),
+                        board.content.containsIgnoreCase(content)
+                )
+                .groupBy(board.boardId)
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        JPAQuery<Long> countQuery = queryFactory
+                .select(board.count())
+                .from(board)
+                .where(
+                        board.existStatus.eq(ExistStatus.EXISTS),
+                        board.content.containsIgnoreCase(content)
+                );
+
+        return PageableExecutionUtils.getPage(boardInfoDtoList, pageable, countQuery::fetchOne);
     }
 }
