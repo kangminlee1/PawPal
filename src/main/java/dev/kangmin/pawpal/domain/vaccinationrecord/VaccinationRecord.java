@@ -36,10 +36,12 @@ public class VaccinationRecord {
     @JoinColumn(name = "dogId")
     private Dog dog;
 
+    //수정
     public void modifyVaccine(ModifyVaccineDto modifyVaccineDto) {
         this.vaccineType = modifyVaccineDto.getVaccineType();
         this.doseNum = modifyVaccineDto.getNum();
     }
+
 
 
 }

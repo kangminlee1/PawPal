@@ -12,5 +12,4 @@ import java.util.Optional;
 
 @Repository
 public interface VaccinationRecordRepository extends JpaRepository<VaccinationRecord, Long>, VaccinationRecordRepositoryCustom {
-
 }

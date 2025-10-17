@@ -23,6 +23,7 @@ public enum ErrorCode {
 
     //강아지 예방 접종
     VACCINE_IS_NOT_EXISTS("예방접종 기록이 없습니다."),
+    VACCINE_OWNER_MISMATCH("해당 예방접종 기록의 작성자가 아닙니다."),
 
     //강아지 건강 검진
     HEALTH_INFO_IS_NOT_EXISTS("건강검진 기록이 없습니다."),
