@@ -1,6 +1,7 @@
 package dev.kangmin.pawpal.global.config;
 
 import dev.kangmin.pawpal.domain.member.repository.MemberRepository;
+import dev.kangmin.pawpal.domain.member.service.MemberService;
 import dev.kangmin.pawpal.global.jwt.JwtUtil;
 import dev.kangmin.pawpal.global.jwt.filter.JwtAuthenticationFilter;
 import dev.kangmin.pawpal.global.jwt.filter.JwtAuthorizationFilter;
@@ -36,6 +37,7 @@ public class SecurityConfig {
     private final OAuth2CustomUserService oAuth2CustomUserService;
     private final AuthenticationConfiguration authenticationConfiguration;
     private final RefreshTokenService refreshTokenService;
+    private final MemberService memberService;
 
     /**
      * 로그인 --> 사용자 자격 증명 검증 및 권한 부여
@@ -50,7 +52,7 @@ public class SecurityConfig {
     //핸들러
     @Bean
     public OAuthSuccessHandler oAuthSuccessHandler(){
-        return new OAuthSuccessHandler(jwtUtil(),refreshTokenService);
+        return new OAuthSuccessHandler(jwtUtil(),refreshTokenService, memberService);
     }
     @Bean
     public OAuthFailureHandler oAuthFailureHandler(){

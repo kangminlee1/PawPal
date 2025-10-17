@@ -8,9 +8,13 @@ import dev.kangmin.pawpal.domain.member.repository.MemberRepository;
 import dev.kangmin.pawpal.global.error.exception.CustomException;
 import dev.kangmin.pawpal.global.error.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import static dev.kangmin.pawpal.global.error.exception.ErrorCode.*;
+import static org.springframework.http.HttpStatus.*;
 
 @Service
 @RequiredArgsConstructor
@@ -41,7 +45,12 @@ public class MemberService {
     //사용자 찾기
     public Member findMemberByEmail(String email) {
         return memberRepository.findByEmail(email)
-                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_IS_NOT_EXISTS));
+                .orElseThrow(() -> new CustomException(BAD_REQUEST, MEMBER_IS_NOT_EXISTS));
+    }
+
+    public Member findMemberByMemberId(Long memberId) {
+        return memberRepository.findByMemberId(memberId)
+                .orElseThrow(() -> new CustomException(BAD_REQUEST, MEMBER_IS_NOT_EXISTS));
     }
 
     //사용자 정보 수정

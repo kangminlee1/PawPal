@@ -16,7 +16,7 @@ public enum ErrorCode {
 
     //회원
     MEMBER_IS_NOT_EXISTS("사용자가 존재하지 않습니다."),
-
+    UNAUTHORIZED_MEMBER("로그인된 사용자와 댓글 작성자가 다릅니다."),
 
     //강아지
     DOG_IS_NOT_EXISTS("귀하의 강아지가 존재하지 않습니다."),
@@ -32,7 +32,10 @@ public enum ErrorCode {
 
 
     //게시판(커뮤니티)
-    BOARD_IS_NOT_EXISTS("해당 게시글이 존재하지 않습니다.");
+    BOARD_IS_NOT_EXISTS("해당 게시글이 존재하지 않습니다."),
+
+    //댓글;
+    COMMENT_IS_NOT_EXISTS("해당 댓글이 존재하지 않습니다.");
 
 
     private final String errorMessage;

@@ -51,4 +51,13 @@ public class Comment {
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
     @Builder.Default
     private List<Comment> children = new ArrayList<>();
+
+    //댓글 수정
+    public void modifiedComment(String content) {
+        this.content = content;
+    }
+
+    public void deleteComment(ExistStatus existStatus) {
+        this.existStatus = existStatus;
+    }
 }

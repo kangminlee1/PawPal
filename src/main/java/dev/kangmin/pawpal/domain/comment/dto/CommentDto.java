@@ -2,6 +2,8 @@ package dev.kangmin.pawpal.domain.comment.dto;
 
 import dev.kangmin.pawpal.domain.comment.Comment;
 import dev.kangmin.pawpal.domain.enums.ExistStatus;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,13 +18,18 @@ import java.util.List;
 @Builder
 public class CommentDto {
 
+    private Long commentId;
+    @NotBlank
     private Long memberId;// 멤버 검증
+    @NotNull
     private String content;
     private Date createDate;
+    @NotBlank
     private String memberName;
 
     //대댓글
     private List<CommentDto> children;
+    @NotBlank
     private Long parentId;
 
     public static CommentDto of(Comment comment) {
