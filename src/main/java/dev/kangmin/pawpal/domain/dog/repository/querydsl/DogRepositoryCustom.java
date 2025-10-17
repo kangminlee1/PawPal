@@ -1,17 +1,18 @@
 package dev.kangmin.pawpal.domain.dog.repository.querydsl;
 
-import dev.kangmin.pawpal.domain.dog.Dog;
+import dev.kangmin.pawpal.domain.dog.dto.DogInquiryDto;
+import dev.kangmin.pawpal.domain.member.Member;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 @Repository
 public interface DogRepositoryCustom {
 
-    List<Dog> findByMemberEmailAndSortBy(String email, boolean sortBy);
+    Page<DogInquiryDto> findByMemberAndSortBy(Member member, boolean sortBy, Pageable pageable);
 
-    List<Dog> findByMemberEmail(String email);
+    Page<DogInquiryDto> findDogListByMember(Member member, Pageable pageable);
 
-    List<Dog>findByMemberEmailAndBreed(String email, String breed);
+    Page<DogInquiryDto> findByMemberAndBreed(Member member, String breed, Pageable pageable);
 
 }

@@ -1,6 +1,7 @@
 package dev.kangmin.pawpal.domain.dog.dto;
 
 import dev.kangmin.pawpal.domain.dog.Dog;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,9 +13,15 @@ import lombok.NoArgsConstructor;
 @Builder
 public class DogInfoDto {
 
+    @NotBlank
+    private Long memberId;
+    @NotBlank
     private String name;
+    @NotBlank
     private String breed;
+    @NotBlank
     private boolean isNeutralizing;
+    @NotBlank
     private int age;
     private String image;
 

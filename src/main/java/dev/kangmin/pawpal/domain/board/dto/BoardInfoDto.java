@@ -20,6 +20,5 @@ public class BoardInfoDto {
     private Date createDate;
     private int viewCount;
     private String memberName;//작성자 이름
-
-
+    private int likeCount;
 }

@@ -2,6 +2,7 @@ package dev.kangmin.pawpal.domain.dog;
 
 import dev.kangmin.pawpal.domain.dog.dto.DogInfoDto;
 import dev.kangmin.pawpal.domain.dog.dto.DogInquiryDto;
+import dev.kangmin.pawpal.domain.dog.dto.UpdateDogDto;
 import dev.kangmin.pawpal.domain.enums.ExistStatus;
 import dev.kangmin.pawpal.domain.foodrecord.FoodRecord;
 import dev.kangmin.pawpal.domain.healthrecord.HealthRecord;
@@ -48,7 +49,7 @@ public class Dog {
     @OneToMany(mappedBy = "dog")
     private List<FoodRecord> foodRecordList;
 
-    public void modifyInfo(DogInfoDto dogInfoDto) {
+    public void modifyInfo(UpdateDogDto dogInfoDto) {
         this.name = dogInfoDto.getName();
         this.breed = dogInfoDto.getBreed();
         this.isNeutralizing = dogInfoDto.isNeutralizing();

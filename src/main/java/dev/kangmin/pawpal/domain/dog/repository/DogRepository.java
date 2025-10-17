@@ -16,6 +16,6 @@ public interface DogRepository extends JpaRepository<Dog, Long>, DogRepositoryCu
 
     Optional<Dog> findByDogId(Long dogId);
 
-    Optional<Dog> findByMemberEmailAndDogId(String email, Long dogId);
+    Optional<Dog> findByMemberMemberIdAndDogId(Long memberId, Long dogId);
 
 }

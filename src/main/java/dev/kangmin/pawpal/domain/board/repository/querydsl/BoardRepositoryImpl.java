@@ -36,7 +36,7 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
                         board.viewCount,
                         board.member.name,
                         Expressions.numberTemplate(Long.class,
-                                        "sum(case when {0} = {1} then 1 else 0 end",
+                                        "sum(case when {0} = {1} then 1 else 0 end)",
                                         myLike.existStatus,
                                         ExistStatus.EXISTS)
                                 .coalesce(0L)
@@ -45,7 +45,7 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
                 .from(board)
                 .leftJoin(myLike).on(myLike.board.eq(board))
                 .where(board.existStatus.eq(ExistStatus.EXISTS))
-                .groupBy(board.boardId)
+                .groupBy(board.boardId, board.title, board.createDate, board.viewCount, board.member.name)
 
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -72,7 +72,7 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
                                 board.viewCount,
                                 board.member.name,
                                 Expressions.numberTemplate(Long.class,
-                                                "sum(case when {0} = {1} then 1 else 0 end",
+                                                "sum(case when {0} = {1} then 1 else 0 end)",
                                                 myLike.existStatus,
                                                 ExistStatus.EXISTS)
                                         .coalesce(0L)
@@ -84,7 +84,7 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
                         board.member.email.eq(email),
                         board.existStatus.eq(ExistStatus.EXISTS)
                 )
-                .groupBy(board.boardId)
+                .groupBy(board.boardId, board.title, board.createDate, board.viewCount, board.member.name)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -110,7 +110,7 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
                                 board.viewCount,
                                 board.member.name,
                                 Expressions.numberTemplate(Long.class,
-                                                "sum(case when {0} = {1} then 1 else 0 end",
+                                                "sum(case when {0} = {1} then 1 else 0 end)",
                                                 myLike.existStatus,
                                                 ExistStatus.EXISTS)
                                         .coalesce(0L)
@@ -122,7 +122,7 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
                         board.existStatus.eq(ExistStatus.EXISTS),
                         board.createDate.between(startDate, endDate)
                 )
-                .groupBy(board.boardId)
+                .groupBy(board.boardId, board.title, board.createDate, board.viewCount, board.member.name)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -151,7 +151,7 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
                                 board.viewCount,
                                 board.member.name,
                                 Expressions.numberTemplate(Long.class,
-                                                "sum(case when {0} = {1} then 1 else 0 end",
+                                                "sum(case when {0} = {1} then 1 else 0 end)",
                                                 myLike.existStatus,
                                                 ExistStatus.EXISTS)
                                         .coalesce(0L)
@@ -162,7 +162,7 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
                 .where(
                         board.existStatus.eq(ExistStatus.EXISTS)
                 )
-                .groupBy(board.boardId)
+                .groupBy(board.boardId, board.title, board.createDate, board.viewCount, board.member.name)
                 .orderBy(board.viewCount.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -189,7 +189,7 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
                                 board.viewCount,
                                 board.member.name,
                                 Expressions.numberTemplate(Long.class,
-                                                "sum(case when {0} = {1} then 1 else 0 end",
+                                                "sum(case when {0} = {1} then 1 else 0 end)",
                                                 myLike.existStatus,
                                                 ExistStatus.EXISTS)
                                         .coalesce(0L)
@@ -200,11 +200,11 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
                 .where(
                         board.existStatus.eq(ExistStatus.EXISTS)
                 )
-                .groupBy(board.boardId)
+                .groupBy(board.boardId, board.title, board.createDate, board.viewCount, board.member.name)
                 .orderBy(
                         Expressions.numberTemplate(
                                 Long.class,
-                                "sum(case when {0} = {1} then 1 else 0 end",
+                                "sum(case when {0} = {1} then 1 else 0 end)",
                                 myLike.existStatus,
                                 ExistStatus.EXISTS
                         ).desc()
@@ -238,7 +238,7 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
                                 board.viewCount,
                                 board.member.name,
                                 Expressions.numberTemplate(Long.class,
-                                                "sum(case when {0} = {1} then 1 else 0 end",
+                                                "sum(case when {0} = {1} then 1 else 0 end)",
                                                 myLike.existStatus,
                                                 ExistStatus.EXISTS)
                                         .coalesce(0L)
@@ -250,7 +250,7 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
                         board.existStatus.eq(ExistStatus.EXISTS),
                         board.title.containsIgnoreCase(title)
                 )
-                .groupBy(board.boardId)
+                .groupBy(board.boardId, board.title, board.createDate, board.viewCount, board.member.name)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -277,7 +277,7 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
                         board.viewCount,
                         board.member.name,
                         Expressions.numberTemplate(Long.class,
-                                        "sum(case when {0} = {1} then 1 else 0 end",
+                                        "sum(case when {0} = {1} then 1 else 0 end)",
                                         myLike.existStatus,
                                         ExistStatus.EXISTS)
                                 .coalesce(0L)
@@ -290,7 +290,7 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
                         board.existStatus.eq(ExistStatus.EXISTS),
                         board.title.containsIgnoreCase(keyword).or(board.content.containsIgnoreCase(keyword))
                 )
-                .groupBy(board.boardId)
+                .groupBy(board.boardId, board.title, board.createDate, board.viewCount, board.member.name)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -319,7 +319,7 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
                                 board.viewCount,
                                 board.member.name,
                                 Expressions.numberTemplate(Long.class,
-                                        "sum(case when {0} = {1} then 1 else 0 end",
+                                        "sum(case when {0} = {1} then 1 else 0 end)",
                                         myLike.existStatus,
                                         ExistStatus.EXISTS)
                                 )
@@ -330,7 +330,7 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
                         board.existStatus.eq(ExistStatus.EXISTS),
                         board.content.containsIgnoreCase(content)
                 )
-                .groupBy(board.boardId)
+                .groupBy(board.boardId, board.title, board.createDate, board.viewCount, board.member.name)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();

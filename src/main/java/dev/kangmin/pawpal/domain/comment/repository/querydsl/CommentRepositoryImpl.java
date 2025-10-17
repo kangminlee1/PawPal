@@ -17,7 +17,7 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom{
         return queryFactory
                 .select(comment)
                 .from(comment)
-                .where()
+                .where(comment.parent.commentId.eq(parentId))
                 .fetchOne();
     }
 }
