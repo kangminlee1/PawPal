@@ -97,7 +97,7 @@ public class CommentService {
 
         if (!member.equals(comment.getMember())) {
             //현재 로그인된 사용자의 댓글이 아닐 경우
-            throw new CustomException(FORBIDDEN, UNAUTHORIZED_MEMBER);
+            throw new CustomException(FORBIDDEN, COMMENT_OWNER_MISMATCH);
         }
 
         comment.deleteComment(ExistStatus.DELETED);
@@ -113,7 +113,7 @@ public class CommentService {
 
         if (!member.equals(comment.getMember())) {
             //현재 로그인된 사용자의 댓글이 아닐 경우
-            throw new CustomException(FORBIDDEN, UNAUTHORIZED_MEMBER);
+            throw new CustomException(FORBIDDEN, COMMENT_OWNER_MISMATCH);
         }
 
         comment.modifiedComment(updateCommentDto.getContent());
