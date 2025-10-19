@@ -44,7 +44,7 @@ public class JwtUtil {
 
 
     //생성부 (원래는 authkey 만 받음)
-    public JwtToken generateJwtToken(String authKey, String memberId) {
+    public JwtToken generateJwtToken(String authKey, Long memberId) {
         final Date now = new Date();
 
         return JwtToken.builder()
@@ -53,7 +53,7 @@ public class JwtUtil {
                 .build();
     }
 
-    public String generateAccessToken(String authKey, Date now, String memberId) {
+    public String generateAccessToken(String authKey, Date now, Long memberId) {
         Date expireDate = new Date(now.getTime() + ACCESS_EXPIRE_TIME);
         return Jwts.builder()
                 .issuer("pawpal")
@@ -68,7 +68,7 @@ public class JwtUtil {
                 .compact();
     }
 
-    public String generateRefreshToken(String authKey, Date now, String memberId) {
+    public String generateRefreshToken(String authKey, Date now, Long memberId) {
         Date expireDate = new Date(now.getTime() + REFRESH_EXPIRE_TIME);
 
         return Jwts.builder()
