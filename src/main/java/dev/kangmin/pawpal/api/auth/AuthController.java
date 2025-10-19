@@ -7,6 +7,7 @@ import dev.kangmin.pawpal.global.jwt.dto.JwtToken;
 import dev.kangmin.pawpal.global.redis.AuthService;
 import dev.kangmin.pawpal.global.redis.dto.GetJwtTokenDto;
 import dev.kangmin.pawpal.global.redis.dto.PostRefreshTokenDto;
+import dev.kangmin.pawpal.global.security.AuthMember;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,7 +35,8 @@ public class AuthController {
     //로그아웃
     @PostMapping("/logout")
     public ResponseEntity<?> logout(
-            @AuthenticationPrincipal Member member,
+//            @AuthenticationPrincipal Member member,
+            @AuthMember Member member,
             @RequestBody PostRefreshTokenDto postRefreshTokenDto){
         authService.logout(member, postRefreshTokenDto);
         return new ResponseEntity<>(HttpStatus.OK);

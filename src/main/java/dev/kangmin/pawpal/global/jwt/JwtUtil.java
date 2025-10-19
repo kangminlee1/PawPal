@@ -44,7 +44,7 @@ public class JwtUtil {
 
 
     //생성부 (원래는 authkey 만 받음)
-    public JwtToken generateJwtToken(String authKey, Long memberId) {
+    public JwtToken generateJwtToken(String authKey, String memberId) {
         final Date now = new Date();
 
         return JwtToken.builder()
@@ -53,7 +53,7 @@ public class JwtUtil {
                 .build();
     }
 
-    public String generateAccessToken(String authKey, Date now, long memberId) {
+    public String generateAccessToken(String authKey, Date now, String memberId) {
         Date expireDate = new Date(now.getTime() + ACCESS_EXPIRE_TIME);
         return Jwts.builder()
                 .issuer("pawpal")
@@ -68,7 +68,7 @@ public class JwtUtil {
                 .compact();
     }
 
-    public String generateRefreshToken(String authKey, Date now, long memberId) {
+    public String generateRefreshToken(String authKey, Date now, String memberId) {
         Date expireDate = new Date(now.getTime() + REFRESH_EXPIRE_TIME);
 
         return Jwts.builder()
@@ -107,13 +107,14 @@ public class JwtUtil {
      * @param token
      * @return
      */
-    private Long getMemberId(String token) {
+    private String getMemberId(String token) {
         return Jwts.parser()
                 .verifyWith(secretKey)
                 .build()
                 .parseSignedClaims(token)
                 .getPayload()
-                .get("memberId", Long.class);
+                .get("memberId", String.class);
+
     }
 
     /**
@@ -155,7 +156,7 @@ public class JwtUtil {
      */
     public Member validJwtToken(String token) {
         String authKey = getAuthKeyClaim(token);
-        Long memberId = getMemberId(token);
+        String memberId = getMemberId(token);
 
         if (authKey == null || memberId == null) {
             return null;
@@ -176,7 +177,7 @@ public class JwtUtil {
      */
     public boolean validRefreshToken(String refreshToken) {
         String authKey = getAuthKeyClaim(refreshToken);
-        Long memberId = getMemberId(refreshToken);
+        String memberId = getMemberId(refreshToken);
 
         if (authKey == null || memberId == null) {
             return false;

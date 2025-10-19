@@ -24,8 +24,8 @@ public class MyLikeService {
 
     //좋아요 등록 및 수정
     @Transactional
-    public void registerOrCanceledLike(String email, long boardId){
-        MyLike myLike = myLikeRepository.findByMemberEmailAndBoardId(email, boardId);
+    public void registerOrCanceledLike(Member member, long boardId){
+        MyLike myLike = myLikeRepository.findByMemberEmailAndBoardId(member.getMemberId(), boardId);
 
         if(myLike!=null){
             //처음 좋아요 등록할 때

@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -47,6 +48,7 @@ public class VaccinationRecordService {
      * @param member
      * @param generateVaccinationDto
      */
+    @Transactional
     public void generateVaccinationRecord(Member member, GenerateVaccinationDto generateVaccinationDto) {
         Dog dog = dogService.findDogByMemberIdAndDogId(member.getMemberId(), generateVaccinationDto.getDogId());
 
@@ -64,6 +66,7 @@ public class VaccinationRecordService {
      * @param member
      * @param modifyVaccineDto
      */
+    @Transactional
     public void modifyVaccinationRecord(Member member, ModifyVaccineDto modifyVaccineDto) {
         Dog dog = dogService.findDogByMemberIdAndDogId(member.getMemberId(), modifyVaccineDto.getDogId());
 
@@ -81,12 +84,24 @@ public class VaccinationRecordService {
     //삭제 -> 보류
 //    public void deleteVaccinationRecord(Member member, ModifyVaccineDto modifyVaccineDto) {
 
-    //전체 조회 -> 강아지 1마리의 예방 접종 기록은 데이터가 많지 않아서 LIST 로 처리
+    /**
+     * 나의 강아지의 전체 예방 접종 기록
+     * @param member
+     * @param dogId
+     * @return
+     */
     public List<VaccineInfoDto> getVaccinationRecordList(Member member, Long dogId) {
         return vaccinationRecordRepository.findVaccinationRecordListByMemberIdAndDogId(member.getMemberId(), dogId);
     }
 
-    //세부정보
+
+    /**
+     * 내 강아지의 예방 접종 기록 상세 조회
+     * @param member
+     * @param dogId
+     * @param vaccineId
+     * @return
+     */
     public VaccineDetailDto getMyDogVaccinationRecordDetail(Member member, Long dogId, Long vaccineId) {
 //        return Optional.ofNullable(vaccinationRecordRepository.findByMemberEmailAndDogIdAndVaccinationRecordId(email, dogId, vaccineId) )
 //                .map(VaccineDetailDto::of)

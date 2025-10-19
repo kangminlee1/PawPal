@@ -66,7 +66,7 @@ public class AuthDetails implements UserDetails, OAuth2User {
 
     @Override
     public String getUsername() {
-        return member.getEmail();
+        return member.getMemberId().toString();
     }
 
 
@@ -81,4 +81,7 @@ public class AuthDetails implements UserDetails, OAuth2User {
         return String.valueOf(attributes.get("email"));
     }
 
+    public String getEmail(){
+        return member.getEmail();
+    }
 }

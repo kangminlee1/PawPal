@@ -18,10 +18,9 @@ import static dev.kangmin.pawpal.domain.vaccinationrecord.QVaccinationRecord.vac
 public class VaccinationRecordRepositoryImpl implements VaccinationRecordRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
-    //
+    //강아지 백신 정보 찾기
     @Override
-    public Optional<VaccinationRecord> findByVaccinationRecordIdAndMemberId(Long vaccinationRecordId, Long memberId) {
-
+    public Optional<VaccinationRecord> findVaccinationRecordByMemberIdAndDogIdAndVaccineId(Long memberId, Long dogId, Long vaccinationRecordId) {
         return Optional.ofNullable(
                 queryFactory
                         .select(vaccinationRecord)
@@ -52,26 +51,5 @@ public class VaccinationRecordRepositoryImpl implements VaccinationRecordReposit
                         vaccinationRecord.dog.dogId.eq(dogId)
                 )
                 .fetch();
-    }
-
-    //사용자의 특정 강아지의 백신 세뷰 정보
-    @Override
-    public VaccineDetailDto findByMemberIdAndDogIdAndVaccinationRecordId(Long memberId, Long dogId, Long vaccinationRecordId) {
-        return queryFactory
-                .select(Projections.constructor(VaccineDetailDto.class,
-                        vaccinationRecord.dog.dogId,
-                        vaccinationRecord.vaccinationRecordId,
-                        vaccinationRecord.vaccineType,
-                        vaccinationRecord.doseNum,
-                        vaccinationRecord.vaccinationDate
-                        )
-                )
-                .from(vaccinationRecord)
-                .where(
-                        vaccinationRecord.dog.member.memberId.eq(memberId),
-                        vaccinationRecord.dog.dogId.eq(dogId),
-                        vaccinationRecord.vaccinationRecordId.eq(vaccinationRecordId)
-                )
-                .fetchOne();
     }
 }

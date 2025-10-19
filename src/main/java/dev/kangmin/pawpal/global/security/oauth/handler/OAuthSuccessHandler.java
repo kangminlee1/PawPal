@@ -37,7 +37,7 @@ public class OAuthSuccessHandler extends SavedRequestAwareAuthenticationSuccessH
         AuthDetails authDetails = (AuthDetails) authentication.getPrincipal();
 
         //사용자 구분을 위해 memberId 추가
-        JwtToken jwtToken = jwtUtil.generateJwtToken(authDetails.getUsername(), authDetails.getMember().getMemberId());
+        JwtToken jwtToken = jwtUtil.generateJwtToken(authDetails.getEmail(), authDetails.getUsername());
 
 
         //로그인 성공 시 refreshtoken 저장 (redis)

@@ -18,9 +18,20 @@ public class AuthDetailsService implements UserDetailsService  {
 
     private final MemberRepository memberRepository;
 
+    //로그인(email 기준)
     @Override
     public AuthDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_IS_NOT_EXISTS));
+
+        return new AuthDetails(member, Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")));
+    }
+
+    //jwt 인증(member Id 기준)
+    public AuthDetails loadByMemberId(String memberIdStr) throws UsernameNotFoundException {
+        Long memberId = Long.parseLong(memberIdStr);
+
+        Member member = memberRepository.findByMemberId(memberId)
                 .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_IS_NOT_EXISTS));
 
         return new AuthDetails(member, Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")));

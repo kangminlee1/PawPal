@@ -36,10 +36,11 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             // json -> java
             ObjectMapper om = new ObjectMapper();
             Member member = om.readValue(request.getInputStream(), Member.class);
-            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                    member.getEmail(),
-                    member.getPassword()
-            );
+            UsernamePasswordAuthenticationToken authenticationToken =
+                    new UsernamePasswordAuthenticationToken(
+                            member.getEmail(),
+                            member.getPassword()
+                    );
 
             Authentication authentication = authenticationManager.authenticate(authenticationToken);
             AuthDetails authDetails = (AuthDetails) authentication.getPrincipal();
@@ -55,7 +56,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         AuthDetails authDetails = (AuthDetails) authResult.getPrincipal();
         String email = authDetails.getMember().getEmail();
         //사용자 구분을 위해 memberId 추가
-        Long memberId = authDetails.getMember().getMemberId();
+        String memberId = String.valueOf(authDetails.getMember().getMemberId());
 
         JwtToken jwtToken = jwtUtil.generateJwtToken(email, memberId);
 
