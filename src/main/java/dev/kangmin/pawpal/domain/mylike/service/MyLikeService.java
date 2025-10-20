@@ -24,7 +24,6 @@ import static org.springframework.http.HttpStatus.*;
 public class MyLikeService {
 
     private final MyLikeRepository myLikeRepository;
-    private final MemberService memberService;
     private final BoardService boardService;
 
     //좋아요 등록 및 수정

@@ -5,9 +5,13 @@ import dev.kangmin.pawpal.domain.member.Member;
 import dev.kangmin.pawpal.domain.member.dto.GenerateDto;
 import dev.kangmin.pawpal.domain.member.dto.ModifyMemberDto;
 import dev.kangmin.pawpal.domain.member.repository.MemberRepository;
+import dev.kangmin.pawpal.domain.mylike.MyLike;
+import dev.kangmin.pawpal.domain.mylike.repository.MyLikeRepository;
+import dev.kangmin.pawpal.domain.mylike.service.MyLikeService;
 import dev.kangmin.pawpal.global.error.exception.CustomException;
 import dev.kangmin.pawpal.global.error.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -23,11 +27,13 @@ import static org.springframework.http.HttpStatus.*;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class MemberService {
 
     private final MemberRepository memberRepository;
     private final BCryptPasswordEncoder passwordEncoder;
 
+    private static final String deleteEmail = "delete@ex.com";
     /**
      * 사용자 등록
      * 단, 생성 전 존재여부 확인 후 등록해야함
@@ -105,21 +111,27 @@ public class MemberService {
     //2. 삭제된 사용자들을 null 값으로 다 처리하면 다 null이라 해당 게시글, 댓글 이걸 어케 처리할까
     //초 분 시간 일 월 요일
     @Scheduled(cron = "0 0 2 * * ?")
+    @Transactional
     public void deleted() {
-        Date now = new Date();
         //삭제 처리중인 사용자 찾기 + 삭제 상태 변경 후 1달 지난 거
         List<Member> deleteMemberList = memberRepository.findByExistsStatusAndDeleteAt(LocalDateTime.now().minusMonths(1));
 
+        //삭제 전용 member
+        Member deletedMember = findMemberByEmail(deleteEmail);
         for (Member member : deleteMemberList) {
             //좋아요 삭제
+            long deleteCount = memberRepository.deleteMyLimeByMember(member);
+            log.info("좋아요 삭제 건수 : " + deleteCount);
 
-            //작성한 게시글, 댓글 "삭제된 사용자" 처리
+            //작성한 게시글, 댓글 "익명화" 처리
+            long anonymizedCount = memberRepository.anonymizeBoardsAndComments(member, deletedMember);
+            log.info("익명화 건수 : " + anonymizedCount);
+
+
 
             //실제 DB에서 삭제 처리
-
+            memberRepository.delete(member);
         }
 
     }
-
-
 }

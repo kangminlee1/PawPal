@@ -7,21 +7,18 @@ import dev.kangmin.pawpal.domain.enums.ExistStatus;
 import dev.kangmin.pawpal.domain.member.Member;
 import dev.kangmin.pawpal.domain.member.service.MemberService;
 import dev.kangmin.pawpal.global.error.exception.CustomException;
-import dev.kangmin.pawpal.global.error.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 
-import static dev.kangmin.pawpal.global.error.exception.ErrorCode.*;
-import static org.springframework.http.HttpStatus.*;
+import static dev.kangmin.pawpal.global.error.exception.ErrorCode.BOARD_IS_NOT_EXISTS;
+import static dev.kangmin.pawpal.global.error.exception.ErrorCode.INVALID_DATE_RANGE;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 @Service
 @RequiredArgsConstructor

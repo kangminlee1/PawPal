@@ -23,7 +23,6 @@ import static org.springframework.http.HttpStatus.*;
 public class CommentService {
 
     private final CommentRepository commentRepository;
-    private final MemberService memberService;
     private final BoardService boardService;
 
     /**

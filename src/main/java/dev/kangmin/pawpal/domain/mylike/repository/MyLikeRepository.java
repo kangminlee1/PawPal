@@ -1,5 +1,6 @@
 package dev.kangmin.pawpal.domain.mylike.repository;
 
+import dev.kangmin.pawpal.domain.member.Member;
 import dev.kangmin.pawpal.domain.mylike.MyLike;
 import dev.kangmin.pawpal.domain.mylike.repository.querydsl.MyLikeRepositoryCustom;
 import org.springframework.data.jpa.repository.JpaRepository;
