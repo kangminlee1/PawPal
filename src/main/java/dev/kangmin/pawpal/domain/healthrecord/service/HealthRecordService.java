@@ -12,6 +12,9 @@ import dev.kangmin.pawpal.domain.member.service.MemberService;
 import dev.kangmin.pawpal.global.error.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,7 +32,11 @@ public class HealthRecordService {
     private final HealthRecordRepository healthRecordRepository;
     private final DogService dogService;
 
-    // 건강 검진 결과 등록
+    /**
+     * 강아지 건강 검진 결과 등록
+     * @param member
+     * @param healthInfoDto
+     */
     @Transactional
     public void generateMyDogHealthRecord(Member member, HealthInfoDto healthInfoDto) {
 
@@ -46,54 +53,96 @@ public class HealthRecordService {
     }
     //사용자가 바로 건강 검진 탭으로 넘어가는 형식으로 결정
 
-    //내 강아지의 건강 검진 정보 찾기
-    public HealthRecord findMyDogHealthRecordByEmailAndDogIdAndHealthRecordId(String email, Long dogId, Long healthId) {
-        return healthRecordRepository.findByMemberEmailAndDogIdAndHealthRecordId(email, dogId, healthId)
+    /**
+     * 나의 강아지 건강 검진 정보 찾기
+     * @param member
+     * @param dogId
+     * @param healthId
+     * @return
+     */
+    public HealthRecord findMyDogHealthRecordByMemberAndDogIdAndHealthRecordId(Member member, Long dogId, Long healthId) {
+        return healthRecordRepository.findByMemberAndDogIdAndHealthRecordId(member, dogId, healthId)
                 .orElseThrow(() -> new CustomException(BAD_REQUEST, HEALTH_INFO_IS_NOT_EXISTS));
     }
 
-    public HealthRecord findMyDogHealthRecordByEmailAndHealthRecordId(String email, Long healthRecordId) {
-        return healthRecordRepository.findByMemberEmailAndHealthRecordId(email, healthRecordId)
+    /**
+     * 나의 강아지 건강 검진 기록 찾기
+     * @param member
+     * @param healthRecordId
+     * @return
+     */
+    public HealthRecord findMyDogHealthRecordByMemberAndHealthRecordId(Member member, Long healthRecordId) {
+        return healthRecordRepository.findByMemberAndHealthRecordId(member, healthRecordId)
                 .orElseThrow(() -> new CustomException(BAD_REQUEST, HEALTH_INFO_IS_NOT_EXISTS));
     }
 
-    //건강 검진 결과 수정
+    /**
+     * 강아지 건강 검진 정보 수정
+     * @param member
+     * @param healthInfoDto
+     */
     @Transactional
-    public void modifiedMyDogHealthRecord(String email, HealthInfoDto healthInfoDto) {
-        HealthRecord newHealthRecord = findMyDogHealthRecordByEmailAndDogIdAndHealthRecordId(email, healthInfoDto.getDogId(), healthInfoDto.getHealthInfoId());
-
+    public void modifiedMyDogHealthRecord(Member member, HealthInfoDto healthInfoDto) {
+        HealthRecord newHealthRecord = findMyDogHealthRecordByMemberAndDogIdAndHealthRecordId(member, healthInfoDto.getDogId(), healthInfoDto.getHealthInfoId());
         newHealthRecord.modifiedHealthInfo(healthInfoDto);
     }
 
-    //건강 검진 목록 조회
-    public List<HealthInquiryDto> getMyDogHealthInquiry(String email) {
-        List<HealthRecord> findHealthRecordList = healthRecordRepository.findByMemberEmail(email);
+    /**
+     * 사용자의 모든 강아지 건강 검진 목록 조회
+     * @param member
+     * @return
+     */
+    public Page<HealthInquiryDto> getMyDogHealthInquiry(Member member, int page ,int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return healthRecordRepository.findByMember(member, pageable);
 
-        return findHealthRecordList.stream()
-                .map(HealthInquiryDto::of)
-                .toList();
+//        return findHealthRecordList.stream()
+//                .map(HealthInquiryDto::of)
+//                .toList();
     }
 
-    // 건강검진 날짜별 조회
-    public List<HealthInquiryDto> getMyDogHealthInquiryOrderByCreateDate(String email, boolean sortBy){
-        List<HealthRecord> findHealthRecordList = healthRecordRepository.findByMemberEmailOrderByCreateDate(email, sortBy);
-        return findHealthRecordList.stream()
-                .map(HealthInquiryDto::of)
-                .toList();
+    /**
+     * 사용자의 모든 강아지 건강 검진 목록 조회
+     * 최신, 오래된 순 정렬
+     * @param member
+     * @param sortBy
+     * @param page
+     * @param size
+     * @return
+     */
+    public Page<HealthInquiryDto> getMyDogHealthInquiryOrderByCreateDate(Member member, boolean sortBy, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return healthRecordRepository.findByMemberOrderByCreateDate(member, sortBy, pageable);
+//        return findHealthRecordList.stream()
+//                .map(HealthInquiryDto::of)
+//                .toList();
     }
 
-    //건강 검진 강아지(이름으로 찾자) 별 조회
-    public List<HealthInquiryDto> getMyDogHealthInquiryByName(String email, String dogName) {
-        List<HealthRecord> findHealthRecordList = healthRecordRepository.findByMemberEmailAndDogName(email, dogName);
-        return findHealthRecordList.stream()
-                .map(HealthInquiryDto::of)
-                .toList();
+    /**
+     * 강아지 이름으로 찾기
+     * @param member
+     * @param dogName
+     * @param page
+     * @param size
+     * @return
+     */
+    public Page<HealthInquiryDto> getMyDogHealthInquiryByName(Member member, String dogName, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return healthRecordRepository.findByMemberAndDogName(member, dogName, pageable);
+//        return findHealthRecordList.stream()
+//                .map(HealthInquiryDto::of)
+//                .toList();
     }
 
-    //건강 검진 세부 조회
-    public HealthDetailDto getMyDotHealthDetailRecord(String email, Long healthRecordId) {
-
-        return HealthDetailDto.of(findMyDogHealthRecordByEmailAndHealthRecordId(email, healthRecordId));
+    /**
+     * 나의 강아지 건강 검진 세부 기록
+     * @param member
+     * @param healthRecordId
+     * @return
+     */
+    public HealthDetailDto getMyDotHealthDetailRecord(Member member, Long healthRecordId) {
+        //querydsl로 N+1 해결
+        return HealthDetailDto.of(findMyDogHealthRecordByMemberAndHealthRecordId(member, healthRecordId));
     }
 
 
