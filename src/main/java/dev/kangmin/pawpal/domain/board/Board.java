@@ -11,6 +11,7 @@ import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -33,12 +34,14 @@ public class Board {
     private ExistStatus existStatus;
 
     private int viewCount;
+    //조언 -> 좋아요 수 집계도 미리 해두면 더 빠르다.
+    private int likeCount;
 
 
     @CreatedDate
-    private Date createDate;
+    private LocalDateTime createDate;
     @LastModifiedDate
-    private Date updateDate;
+    private LocalDateTime updateDate;
 
 
     //연관관계
@@ -60,5 +63,14 @@ public class Board {
 
     public void deleteBoard() {
         this.existStatus = ExistStatus.DELETED;
+    }
+
+    public void addLike() {
+        this.likeCount++;
+    }
+    public void removeLike() {
+        if (this.likeCount > 0) {
+            this.likeCount--;
+        }
     }
 }

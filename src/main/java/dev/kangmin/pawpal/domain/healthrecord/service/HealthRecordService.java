@@ -7,6 +7,7 @@ import dev.kangmin.pawpal.domain.healthrecord.dto.HealthDetailDto;
 import dev.kangmin.pawpal.domain.healthrecord.dto.HealthInfoDto;
 import dev.kangmin.pawpal.domain.healthrecord.dto.HealthInquiryDto;
 import dev.kangmin.pawpal.domain.healthrecord.repository.HealthRecordRepository;
+import dev.kangmin.pawpal.domain.member.Member;
 import dev.kangmin.pawpal.domain.member.service.MemberService;
 import dev.kangmin.pawpal.global.error.exception.CustomException;
 import lombok.RequiredArgsConstructor;
@@ -30,10 +31,10 @@ public class HealthRecordService {
 
     // 건강 검진 결과 등록
     @Transactional
-    public void generateMyDogHealthRecord(String email, HealthInfoDto healthInfoDto) {
+    public void generateMyDogHealthRecord(Member member, HealthInfoDto healthInfoDto) {
 
         //사용자의 강아지가 맞는 지 확인
-        Dog myDog = dogService.findDogByMemberEmailAndDogId(email, healthInfoDto.getDogId());
+        Dog myDog = dogService.findDogByMemberIdAndDogId(member.getMemberId(), healthInfoDto.getDogId());
         HealthRecord healthRecord = HealthRecord.builder()
                 .dog(myDog)
                 .content(healthInfoDto.getContent())

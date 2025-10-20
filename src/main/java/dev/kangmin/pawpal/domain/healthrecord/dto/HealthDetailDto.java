@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Getter
@@ -20,7 +21,7 @@ public class HealthDetailDto {
     private Double weight;
     private Double height;
     private String content;
-    private Date createDate;
+    private LocalDateTime createDate;
 
     public static HealthDetailDto of(HealthRecord healthRecord) {
         return HealthDetailDto.builder()

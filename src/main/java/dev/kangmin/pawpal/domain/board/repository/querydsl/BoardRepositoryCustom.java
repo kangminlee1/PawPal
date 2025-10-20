@@ -6,6 +6,8 @@ import dev.kangmin.pawpal.domain.member.Member;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 public interface BoardRepositoryCustom {
@@ -13,7 +15,7 @@ public interface BoardRepositoryCustom {
 
     Page<BoardInfoDto> findMyBoardByMemberEmail(String email, Pageable pageable);
 
-    Page<BoardInfoDto> findBoardByCreateDateBetween(Pageable pageable, Date startDate, Date endDate);
+    Page<BoardInfoDto> findBoardByCreateDateBetween(Pageable pageable, LocalDateTime startDate, LocalDateTime endDate);
 
     Page<BoardInfoDto> findBoardOrderByViewCount(Pageable pageable);
 

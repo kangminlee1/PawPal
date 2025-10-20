@@ -1,9 +1,6 @@
 package dev.kangmin.pawpal.api.auth;
 
-import dev.kangmin.pawpal.api.auth.dto.LoginDto;
 import dev.kangmin.pawpal.domain.member.Member;
-import dev.kangmin.pawpal.domain.member.service.MemberService;
-import dev.kangmin.pawpal.global.jwt.dto.JwtToken;
 import dev.kangmin.pawpal.global.redis.AuthService;
 import dev.kangmin.pawpal.global.redis.dto.GetJwtTokenDto;
 import dev.kangmin.pawpal.global.redis.dto.PostRefreshTokenDto;
@@ -45,7 +42,7 @@ public class AuthController {
     //재발급
     @PostMapping("/reissue")
     public GetJwtTokenDto reissue(
-            @AuthenticationPrincipal Member member,
+            @AuthMember Member member,
             @RequestBody PostRefreshTokenDto postRefreshTokenDto) {
         return authService.reIssue(member, postRefreshTokenDto);
     }

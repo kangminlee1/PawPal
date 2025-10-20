@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 
@@ -20,7 +21,7 @@ public class VaccineDetailDto {
     private Long vaccinationRecordId;
     private VaccineType vaccineType;
     private int doseNum;
-    private Date vaccinationDate;
+    private LocalDateTime vaccinationDate;
 
     //entity -> dto
     public static VaccineDetailDto of(VaccinationRecord vaccinationRecord) {

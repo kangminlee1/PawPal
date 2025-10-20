@@ -1,10 +1,7 @@
 package dev.kangmin.pawpal.domain.board.service;
 
 import dev.kangmin.pawpal.domain.board.Board;
-import dev.kangmin.pawpal.domain.board.dto.BoardDetailDto;
-import dev.kangmin.pawpal.domain.board.dto.BoardInfoDto;
-import dev.kangmin.pawpal.domain.board.dto.GenerateBoardDto;
-import dev.kangmin.pawpal.domain.board.dto.ModifyBoardDto;
+import dev.kangmin.pawpal.domain.board.dto.*;
 import dev.kangmin.pawpal.domain.board.repository.BoardRepository;
 import dev.kangmin.pawpal.domain.enums.ExistStatus;
 import dev.kangmin.pawpal.domain.member.Member;
@@ -19,7 +16,12 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
+
+import static dev.kangmin.pawpal.global.error.exception.ErrorCode.*;
+import static org.springframework.http.HttpStatus.*;
 
 @Service
 @RequiredArgsConstructor
@@ -31,12 +33,12 @@ public class BoardService {
     //찾기
     public Board findByMemberEmailAndBoardId(String email, Long boardId) {
         return boardRepository.findByMemberEmailAndBoardId(email, boardId)
-                .orElseThrow(() -> new CustomException(HttpStatus.BAD_REQUEST, ErrorCode.BOARD_IS_NOT_EXISTS));
+                .orElseThrow(() -> new CustomException(BAD_REQUEST, BOARD_IS_NOT_EXISTS));
     }
 
     public Board findByBoardId(Long boardId) {
         return boardRepository.findByBoardId(boardId)
-                .orElseThrow(() -> new CustomException(HttpStatus.BAD_REQUEST, ErrorCode.BOARD_IS_NOT_EXISTS));
+                .orElseThrow(() -> new CustomException(BAD_REQUEST, BOARD_IS_NOT_EXISTS));
     }
 
     //등록
@@ -111,7 +113,15 @@ public class BoardService {
     }
 
     //특정 기간(ex) yyyy-mm-dd
-    public Page<BoardInfoDto> getBoardOrderByCreateDate(int page, int size, Date startDate, Date endDate) {
+    public Page<BoardInfoDto> getBoardOrderByCreateDate(int page, int size, DateRangeDto dateRangeDto) {
+        if (dateRangeDto.getStartDate().isAfter(dateRangeDto.getEndDate())) {
+            throw new CustomException(BAD_REQUEST, INVALID_DATE_RANGE);
+        }
+
+        //00시~ 23시 59분 59초
+        LocalDateTime startDate = dateRangeDto.getStartDate().atStartOfDay();
+        LocalDateTime endDate = dateRangeDto.getEndDate().atTime(23, 59, 59);
+
         //최신 순
         Pageable pageable = PageRequest.of(page,size, Sort.by("createDate").descending());
         return boardRepository.findBoardByCreateDateBetween(pageable, startDate, endDate);

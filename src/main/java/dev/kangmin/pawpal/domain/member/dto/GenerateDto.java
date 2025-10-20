@@ -1,11 +1,11 @@
 package dev.kangmin.pawpal.domain.member.dto;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.Getter;
+import lombok.*;
 
-@Data
+@Getter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class GenerateDto {
 
     private String name;

@@ -9,6 +9,7 @@ import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import static jakarta.persistence.EnumType.*;
@@ -28,9 +29,9 @@ public class VaccinationRecord {
     private VaccineType vaccineType;
     private int doseNum;
     @CreatedDate
-    private Date vaccinationDate;
+    private LocalDateTime vaccinationDate;
     @LastModifiedDate
-    private Date updateDate;
+    private LocalDateTime updateDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dogId")

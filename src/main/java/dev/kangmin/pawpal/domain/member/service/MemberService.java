@@ -9,9 +9,14 @@ import dev.kangmin.pawpal.global.error.exception.CustomException;
 import dev.kangmin.pawpal.global.error.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.Date;
+import java.util.List;
 
 import static dev.kangmin.pawpal.global.error.exception.ErrorCode.*;
 import static org.springframework.http.HttpStatus.*;
@@ -25,7 +30,9 @@ public class MemberService {
 
     /**
      * 사용자 등록
-     * -> 단, 생성 전 존재여부 확인 후 등록해야함
+     * 단, 생성 전 존재여부 확인 후 등록해야함
+     * -> OAuth의 경우 처음 로그인할 경우 회원가입이 진행
+     * -> 그 때 등록된 identify 존재 여부 확인 후 없으면 생성
      * @param generateDto
      */
     @Transactional
@@ -43,17 +50,31 @@ public class MemberService {
     }
 
     //사용자 찾기
+    /**
+     * 이메일로 찾기
+     * @param email
+     * @return
+     */
     public Member findMemberByEmail(String email) {
         return memberRepository.findByEmail(email)
                 .orElseThrow(() -> new CustomException(BAD_REQUEST, MEMBER_IS_NOT_EXISTS));
     }
 
+    /**
+     * memberId로 찾기
+     * @param memberId
+     * @return
+     */
     public Member findMemberByMemberId(Long memberId) {
         return memberRepository.findByMemberId(memberId)
                 .orElseThrow(() -> new CustomException(BAD_REQUEST, MEMBER_IS_NOT_EXISTS));
     }
 
-    //사용자 정보 수정
+    /**
+     * 사용자 정보 수정
+     * @param modifyMemberDto
+     * @param email
+     */
     @Transactional
     public void modifiedMember(ModifyMemberDto modifyMemberDto, String email) {
 
@@ -68,13 +89,36 @@ public class MemberService {
 
     //회원 탈퇴
     @Transactional
-    public void deletedMember(String email) {
-        //본인 검증
-        //임시
-        Member member = findMemberByEmail(email);
+    public void changeMember(Member member) {
 
-        //삭제
-        member.changeStatus(ExistStatus.DELETED);
+        if (member.getExistStatus() == ExistStatus.EXISTS) {
+            member.changeStatus(ExistStatus.DELETED, LocalDateTime.now());
+        }else{
+            //삭제 상태를 취소할 경우 null로 처리해야 1달이 지났을 때 삭제 되지 않음
+            member.changeStatus(ExistStatus.EXISTS, null);
+        }
+
+    }
+
+    // 근데 사용자를 완전히 삭제 했을 때  문제점
+    //1. 게시글, 댓글은 남긴다는 가정하에 다시 가입했을때 정보 꼬임
+    //2. 삭제된 사용자들을 null 값으로 다 처리하면 다 null이라 해당 게시글, 댓글 이걸 어케 처리할까
+    //초 분 시간 일 월 요일
+    @Scheduled(cron = "0 0 2 * * ?")
+    public void deleted() {
+        Date now = new Date();
+        //삭제 처리중인 사용자 찾기 + 삭제 상태 변경 후 1달 지난 거
+        List<Member> deleteMemberList = memberRepository.findByExistsStatusAndDeleteAt(LocalDateTime.now().minusMonths(1));
+
+        for (Member member : deleteMemberList) {
+            //좋아요 삭제
+
+            //작성한 게시글, 댓글 "삭제된 사용자" 처리
+
+            //실제 DB에서 삭제 처리
+
+        }
+
     }
 
 

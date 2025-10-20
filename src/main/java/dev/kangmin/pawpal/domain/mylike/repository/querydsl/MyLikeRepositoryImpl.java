@@ -5,6 +5,9 @@ import dev.kangmin.pawpal.domain.mylike.MyLike;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
+import static dev.kangmin.pawpal.domain.board.QBoard.board;
 import static dev.kangmin.pawpal.domain.mylike.QMyLike.myLike;
 
 @Repository
@@ -14,13 +17,14 @@ public class MyLikeRepositoryImpl implements MyLikeRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public MyLike findByMemberEmailAndBoardId(String email, long boardId) {
+    public MyLike findByMemberIdAndBoardId(Long memberId, long boardId) {
         return queryFactory
                 .select(myLike)
                 .from(myLike)
+                .join(myLike.board, board).fetchJoin()
                 .where(
-                        myLike.member.email.eq(email),
-                        myLike.board.boardId.eq(boardId)
+                        myLike.board.boardId.eq(boardId),
+                        myLike.member.memberId.eq(memberId)
                 )
                 .fetchOne();
     }

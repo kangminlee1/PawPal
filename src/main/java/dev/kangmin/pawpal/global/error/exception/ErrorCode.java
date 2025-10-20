@@ -34,10 +34,13 @@ public enum ErrorCode {
 
     //게시판(커뮤니티)
     BOARD_IS_NOT_EXISTS("해당 게시글이 존재하지 않습니다."),
+    INVALID_DATE_RANGE("시작 날짜가 종료 날짜보다 더 빨라야 합니다."),
 
     //댓글
     COMMENT_OWNER_MISMATCH("로그인된 사용자와 댓글 작성자가 다릅니다."),
     COMMENT_IS_NOT_EXISTS("해당 댓글이 존재하지 않습니다.");
+
+    //좋아요
 
 
     private final String errorMessage;

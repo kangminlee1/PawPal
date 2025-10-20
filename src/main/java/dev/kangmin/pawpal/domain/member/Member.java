@@ -12,6 +12,7 @@ import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -54,18 +55,20 @@ public class Member {
     private ExistStatus existStatus;
 
     @CreatedDate
-    private Date createAt;
+    private LocalDateTime createAt;
+
     @LastModifiedDate
-    private Date updateAt;
+    private LocalDateTime updateAt;
 
+    private LocalDateTime deleteAt;
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Dog> dogList;
 
     @OneToMany(mappedBy = "member")
     private List<Board> boardList;
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", orphanRemoval = false)
     private List<MyLike> myLikeList;
 
     @OneToMany(mappedBy = "member")
@@ -79,8 +82,9 @@ public class Member {
         this.password = password;
     }
 
-    public void changeStatus(ExistStatus status) {
+    public void changeStatus(ExistStatus status, LocalDateTime date) {
         this.existStatus = status;
+        this.deleteAt = date;
     }
 
     //of : entity -> dto

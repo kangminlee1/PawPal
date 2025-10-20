@@ -4,7 +4,9 @@ package dev.kangmin.pawpal.domain.healthrecord.dto;
 import dev.kangmin.pawpal.domain.healthrecord.HealthRecord;
 import lombok.Builder;
 import lombok.Getter;
+import org.springframework.cglib.core.Local;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Getter
@@ -15,7 +17,7 @@ public class HealthInquiryDto {
     private Long healthId;
     private String dogName;
     private String content;
-    private Date createDate;
+    private LocalDateTime createDate;
 
     public static HealthInquiryDto of(HealthRecord healthRecord) {
         return HealthInquiryDto.builder()

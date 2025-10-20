@@ -12,6 +12,7 @@ import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -42,10 +43,10 @@ public class FoodRecord {
 
     @CreatedDate
     @Column(nullable = false)
-    private Date createDate;
+    private LocalDateTime createDate;
     @LastModifiedDate
     @Column(nullable = false)
-    private Date updateDate;
+    private LocalDateTime updateDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dogId")

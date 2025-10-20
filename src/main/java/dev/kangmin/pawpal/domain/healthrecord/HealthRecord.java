@@ -8,6 +8,7 @@ import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -28,9 +29,9 @@ public class HealthRecord {
     private String content;
 
     @CreatedDate
-    private Date createDate;
+    private LocalDateTime createDate;
     @LastModifiedDate
-    private Date updateDate;
+    private LocalDateTime updateDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dogId")

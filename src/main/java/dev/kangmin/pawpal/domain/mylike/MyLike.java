@@ -8,6 +8,7 @@ import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -29,11 +30,6 @@ public class MyLike {
 
     @Enumerated(EnumType.STRING)
     private ExistStatus existStatus;
-
-    @CreatedDate
-    private Date createDate;
-    @LastModifiedDate
-    private Date updateDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "memberId")

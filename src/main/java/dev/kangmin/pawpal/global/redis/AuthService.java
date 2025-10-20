@@ -1,24 +1,18 @@
 package dev.kangmin.pawpal.global.redis;
 
-import dev.kangmin.pawpal.api.auth.dto.LoginDto;
 import dev.kangmin.pawpal.domain.member.Member;
 import dev.kangmin.pawpal.global.error.exception.CustomException;
 import dev.kangmin.pawpal.global.error.exception.ErrorCode;
 import dev.kangmin.pawpal.global.jwt.JwtUtil;
-import dev.kangmin.pawpal.global.jwt.dto.JwtToken;
 import dev.kangmin.pawpal.global.redis.dto.GetJwtTokenDto;
 import dev.kangmin.pawpal.global.redis.dto.PostRefreshTokenDto;
-import dev.kangmin.pawpal.global.security.AuthDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.security.Security;
 import java.util.Date;
 
 @Service

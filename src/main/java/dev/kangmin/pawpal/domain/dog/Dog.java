@@ -10,7 +10,10 @@ import dev.kangmin.pawpal.domain.member.Member;
 import dev.kangmin.pawpal.domain.vaccinationrecord.VaccinationRecord;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
@@ -35,18 +38,23 @@ public class Dog {
     @Enumerated(EnumType.STRING)
     private ExistStatus existStatus;
 
+    @CreatedDate
+    private LocalDateTime createDate;
+
+    @LastModifiedDate
+    private LocalDateTime updateDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "memberId")
     private Member member;
 
-    @OneToMany(mappedBy = "dog")
+    @OneToMany(mappedBy = "dog",cascade = CascadeType.ALL, orphanRemoval = true)
     private List<HealthRecord> healthRecordList;
 
-    @OneToMany(mappedBy = "dog")
+    @OneToMany(mappedBy = "dog",cascade = CascadeType.ALL, orphanRemoval = true)
     private List<VaccinationRecord> vaccinationRecordList;
 
-    @OneToMany(mappedBy = "dog")
+    @OneToMany(mappedBy = "dog",cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FoodRecord> foodRecordList;
 
     public void modifyInfo(UpdateDogDto dogInfoDto) {

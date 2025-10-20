@@ -5,6 +5,7 @@ import dev.kangmin.pawpal.domain.foodrecord.FoodRecord;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import lombok.AllArgsConstructor;
@@ -24,7 +25,7 @@ public class FoodInfoDto {
     private Long dogId;
     private String dogName;
     private String foodName;
-    private Date createDate;
+    private LocalDateTime createDate;
 
     public static FoodInfoDto of(FoodRecord foodRecord) {
         return FoodInfoDto.builder()

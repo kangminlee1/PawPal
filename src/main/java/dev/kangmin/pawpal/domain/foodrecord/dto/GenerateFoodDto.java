@@ -18,7 +18,6 @@ import java.util.List;
 @AllArgsConstructor
 public class GenerateFoodDto {
 
-    private String email;
     private Long dogId;
     @NotBlank(message = "사료/간식 이름을 입력해주세요.")
     @Size(max = 50, message = "50자 이내로 입력해주세요")

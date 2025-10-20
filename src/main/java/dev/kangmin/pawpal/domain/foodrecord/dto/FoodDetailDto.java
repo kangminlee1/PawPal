@@ -5,12 +5,14 @@ import dev.kangmin.pawpal.domain.foodrecord.FoodRecord;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.cglib.core.Local;
 
 import java.util.List;
 
@@ -28,7 +30,7 @@ public class FoodDetailDto {
     private FoodType type;
     private int preference;
     private int amount;
-    private Date createDate;
+    private LocalDateTime createDate;
 
     //entity -> dto
     public static FoodDetailDto of(FoodRecord foodRecord) {

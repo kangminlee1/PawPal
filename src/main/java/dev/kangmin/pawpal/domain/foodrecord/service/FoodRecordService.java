@@ -9,6 +9,7 @@ import dev.kangmin.pawpal.domain.foodrecord.dto.stats.FoodRatioDto;
 import dev.kangmin.pawpal.domain.foodrecord.dto.stats.FoodTypeNameDto;
 import dev.kangmin.pawpal.domain.foodrecord.dto.stats.TopWorstFoodDto;
 import dev.kangmin.pawpal.domain.foodrecord.repository.FoodRecordRepository;
+import dev.kangmin.pawpal.domain.member.Member;
 import dev.kangmin.pawpal.domain.member.service.MemberService;
 import dev.kangmin.pawpal.global.error.exception.CustomException;
 import dev.kangmin.pawpal.global.error.exception.ErrorCode;
@@ -33,9 +34,9 @@ public class FoodRecordService {
 
     //강아지의 사료/간식 정보 등록
     @Transactional
-    public void generateFoodRecord(GenerateFoodDto foodDto) {
+    public void generateFoodRecord(Member member, GenerateFoodDto foodDto) {
         //해당 하는 강아지
-        Dog dog = dogService.findDogByMemberEmailAndDogId(foodDto.getEmail(), foodDto.getDogId());
+        Dog dog = dogService.findDogByMemberIdAndDogId(member.getMemberId(), foodDto.getDogId());
 
         FoodRecord foodRecord = FoodRecord.builder()
                 .type(foodDto.getType())

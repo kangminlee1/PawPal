@@ -10,6 +10,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -23,7 +24,7 @@ public class BoardDetailDto {
     private String title;
     private String memberName;
     @JsonFormat(pattern = "yyyy-mm-dd", timezone = "Asia/Seoul")
-    private Date createDate;
+    private LocalDateTime createDate;
     private String content;
     private int viewCount;
 
