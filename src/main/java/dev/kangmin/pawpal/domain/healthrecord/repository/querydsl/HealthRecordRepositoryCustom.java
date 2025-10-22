@@ -16,9 +16,9 @@ public interface HealthRecordRepositoryCustom {
 
     Optional<HealthRecord> findByMemberAndHealthRecordId(Member member, Long healthRecordId);
 
-    Page<HealthInquiryDto> findByMember (Member member, Pageable pageable);
+//    Page<HealthInquiryDto> findByMember (Member member, Pageable pageable);
 
-    Page<HealthInquiryDto> findByMemberOrderByCreateDate(Member member, boolean sortBy, Pageable pageable);
+    Page<HealthInquiryDto> findByMemberOrderByCreateDate(Member member, Boolean sortBy, Pageable pageable);
 
-    Page<HealthInquiryDto> findByMemberAndDogName(Member member, String dogName, Pageable pageable);
+    Page<HealthInquiryDto> findByMemberAndDogName(Member member, String dogName, Boolean sortBy, Pageable pageable);
 }

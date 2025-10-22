@@ -18,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static dev.kangmin.pawpal.global.error.exception.ErrorCode.*;
@@ -34,6 +35,7 @@ public class HealthRecordService {
 
     /**
      * 강아지 건강 검진 결과 등록
+     *
      * @param member
      * @param healthInfoDto
      */
@@ -42,6 +44,22 @@ public class HealthRecordService {
 
         //사용자의 강아지가 맞는 지 확인
         Dog myDog = dogService.findDogByMemberIdAndDogId(member.getMemberId(), healthInfoDto.getDogId());
+
+        //여기에 강아지 나이대 별로 저장
+        //1세 이하 1달 기준
+        //2~6세 반년
+        //7세 이상 3개월
+
+        int age = myDog.getAge();
+        LocalDateTime now = LocalDateTime.now();
+        if (age <= 1) {
+            myDog.modifiedDate(now, now.plusMonths(1));
+        } else if (age <= 6) {
+            myDog.modifiedDate(now, now.plusMonths(6));
+        } else {
+            myDog.modifiedDate(now, now.plusMonths(3));
+        }
+
         HealthRecord healthRecord = HealthRecord.builder()
                 .dog(myDog)
                 .content(healthInfoDto.getContent())
@@ -52,9 +70,9 @@ public class HealthRecordService {
         healthRecordRepository.save(healthRecord);
     }
     //사용자가 바로 건강 검진 탭으로 넘어가는 형식으로 결정
-
     /**
      * 나의 강아지 건강 검진 정보 찾기
+     *
      * @param member
      * @param dogId
      * @param healthId
@@ -67,6 +85,7 @@ public class HealthRecordService {
 
     /**
      * 나의 강아지 건강 검진 기록 찾기
+     *
      * @param member
      * @param healthRecordId
      * @return
@@ -78,6 +97,7 @@ public class HealthRecordService {
 
     /**
      * 강아지 건강 검진 정보 수정
+     *
      * @param member
      * @param healthInfoDto
      */
@@ -87,22 +107,24 @@ public class HealthRecordService {
         newHealthRecord.modifiedHealthInfo(healthInfoDto);
     }
 
+//    /**
+//     * 사용자의 모든 강아지 건강 검진 목록 조회
+//     *
+//     * @param member
+//     * @return
+//     */
+//    public Page<HealthInquiryDto> getMyDogHealthInquiry(Member member, int page, int size) {
+//        Pageable pageable = PageRequest.of(page, size);
+//        return healthRecordRepository.findByMember(member, pageable);
+//
+////        return findHealthRecordList.stream()
+////                .map(HealthInquiryDto::of)
+////                .toList();
+//    }
+
     /**
      * 사용자의 모든 강아지 건강 검진 목록 조회
-     * @param member
-     * @return
-     */
-    public Page<HealthInquiryDto> getMyDogHealthInquiry(Member member, int page ,int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        return healthRecordRepository.findByMember(member, pageable);
-
-//        return findHealthRecordList.stream()
-//                .map(HealthInquiryDto::of)
-//                .toList();
-    }
-
-    /**
-     * 사용자의 모든 강아지 건강 검진 목록 조회
+     * 기본 최신순
      * 최신, 오래된 순 정렬
      * @param member
      * @param sortBy
@@ -110,7 +132,7 @@ public class HealthRecordService {
      * @param size
      * @return
      */
-    public Page<HealthInquiryDto> getMyDogHealthInquiryOrderByCreateDate(Member member, boolean sortBy, int page, int size) {
+    public Page<HealthInquiryDto> getMyDogHealthInquiryOrderByCreateDate(Member member, Boolean sortBy, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         return healthRecordRepository.findByMemberOrderByCreateDate(member, sortBy, pageable);
 //        return findHealthRecordList.stream()
@@ -120,15 +142,16 @@ public class HealthRecordService {
 
     /**
      * 강아지 이름으로 찾기
+     *
      * @param member
      * @param dogName
      * @param page
      * @param size
      * @return
      */
-    public Page<HealthInquiryDto> getMyDogHealthInquiryByName(Member member, String dogName, int page, int size) {
+    public Page<HealthInquiryDto> getMyDogHealthInquiryByName(Member member, String dogName, Boolean sortBy, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        return healthRecordRepository.findByMemberAndDogName(member, dogName, pageable);
+        return healthRecordRepository.findByMemberAndDogName(member, dogName, sortBy, pageable);
 //        return findHealthRecordList.stream()
 //                .map(HealthInquiryDto::of)
 //                .toList();
@@ -136,15 +159,13 @@ public class HealthRecordService {
 
     /**
      * 나의 강아지 건강 검진 세부 기록
+     *
      * @param member
      * @param healthRecordId
      * @return
      */
     public HealthDetailDto getMyDotHealthDetailRecord(Member member, Long healthRecordId) {
-        //querydsl로 N+1 해결
+        //querydsl로 N+1 해결(fetchJoin
         return HealthDetailDto.of(findMyDogHealthRecordByMemberAndHealthRecordId(member, healthRecordId));
     }
-
-
-    //건강 검진 이메일 알림?? 아니면 이메일 전용으로 따로 뺄까?
 }

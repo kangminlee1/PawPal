@@ -44,6 +44,11 @@ public class Dog {
     @LastModifiedDate
     private LocalDateTime updateDate;
 
+    //건강 검진 일
+    private LocalDateTime lastHealthCheckDate;
+    private LocalDateTime nextHealthCheckDate;
+
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "memberId")
     private Member member;
@@ -67,6 +72,11 @@ public class Dog {
 
     public void change(ExistStatus existStatus) {
         this.existStatus = existStatus;
+    }
+
+    public void modifiedDate(LocalDateTime lastHealthCheckDate, LocalDateTime nextHealthCheckDate) {
+        this.lastHealthCheckDate = lastHealthCheckDate;
+        this.nextHealthCheckDate = nextHealthCheckDate;
     }
 
 }

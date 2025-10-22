@@ -24,6 +24,7 @@ import static dev.kangmin.pawpal.domain.member.QMember.member;
 public class HealthRecordRepositoryImpl implements HealthRecordRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
+    // 찾기
     @Override
     public Optional<HealthRecord> findByMemberAndDogIdAndHealthRecordId(Member nowMember, Long dogId, Long healthRecordId) {
         return Optional.ofNullable(
@@ -55,39 +56,46 @@ public class HealthRecordRepositoryImpl implements HealthRecordRepositoryCustom 
         );
     }
 
+    //목록 조회
+    //사용자의 모든 강아지 ( 기본 최신순)
+//    @Override
+//    public Page<HealthInquiryDto> findByMember(Member member, Pageable pageable) {
+//
+//        List<HealthInquiryDto> healthInquiryDtoList = queryFactory
+//                .select(
+//                        Projections.constructor(HealthInquiryDto.class,
+//                                healthRecord.dog.dogId,
+//                                healthRecord.healthRecordId,
+//                                healthRecord.dog.name,
+//                                healthRecord.content,
+//                                healthRecord.createDate
+//                        )
+//                )
+//                .from(healthRecord)
+//                .where(
+//                        healthRecord.dog.member.eq(member)
+//                )
+//                .orderBy(healthRecord.createDate.desc())
+//                .offset(pageable.getOffset())
+//                .limit(pageable.getPageSize())
+//                .fetch();
+//
+//        JPAQuery<Long> countQuery = queryFactory
+//                .select(healthRecord.count())
+//                .from(healthRecord)
+//                .where(
+//                        healthRecord.dog.member.eq(member)
+//                );
+//
+//        return PageableExecutionUtils.getPage(healthInquiryDtoList, pageable, countQuery::fetchOne);
+//    }
+
+    //나의 모든 강아지의 건강검진 목록 조회
+    //기본 최신순
+    //토글로 오름차순, 내림차순 선택 값에 따라 변화
     @Override
-    public Page<HealthInquiryDto> findByMember(Member member, Pageable pageable) {
-
-        List<HealthInquiryDto> healthInquiryDtoList = queryFactory
-                .select(
-                        Projections.constructor(HealthInquiryDto.class,
-                                healthRecord.dog.dogId,
-                                healthRecord.healthRecordId,
-                                healthRecord.dog.name,
-                                healthRecord.content,
-                                healthRecord.createDate
-                        )
-                )
-                .from(healthRecord)
-                .where(
-                        healthRecord.dog.member.eq(member)
-                )
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetch();
-
-        JPAQuery<Long> countQuery = queryFactory
-                .select(healthRecord.count())
-                .from(healthRecord)
-                .where(
-                        healthRecord.dog.member.eq(member)
-                );
-
-        return PageableExecutionUtils.getPage(healthInquiryDtoList, pageable, countQuery::fetchOne);
-    }
-
-    @Override
-    public Page<HealthInquiryDto> findByMemberOrderByCreateDate(Member member, boolean sortBy, Pageable pageable) {
+    public Page<HealthInquiryDto> findByMemberOrderByCreateDate(Member member, Boolean sortBy, Pageable pageable) {
+        sortBy = sortBy == null || sortBy;
 
         List<HealthInquiryDto> healthInquiryDtoList = queryFactory
                 .select(Projections.constructor(
@@ -119,8 +127,12 @@ public class HealthRecordRepositoryImpl implements HealthRecordRepositoryCustom 
         return PageableExecutionUtils.getPage(healthInquiryDtoList, pageable, countQuery::fetchOne);
     }
 
+    //사용자의 강아지 이름으로 건강검진 목록 조회
+    //기본 내림차순
     @Override
-    public Page<HealthInquiryDto> findByMemberAndDogName(Member member, String dogName, Pageable pageable) {
+    public Page<HealthInquiryDto> findByMemberAndDogName(Member member, String dogName, Boolean sortBy, Pageable pageable) {
+        sortBy = sortBy == null || sortBy;
+
         List<HealthInquiryDto> healthInquiryDtoList = queryFactory
                 .select(Projections.constructor(
                                 HealthInquiryDto.class,
@@ -135,6 +147,10 @@ public class HealthRecordRepositoryImpl implements HealthRecordRepositoryCustom 
                 .where(
                         healthRecord.dog.member.eq(member),
                         healthRecord.dog.name.eq(dogName)
+                )
+                .orderBy(
+                        sortBy ?
+                                healthRecord.createDate.desc() : healthRecord.createDate.asc()
                 )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
