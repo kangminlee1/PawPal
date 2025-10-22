@@ -31,6 +31,9 @@ public class DogService {
     private final DogRepository dogRepository;
     private final MemberService memberService;
 
+    //강아지 이름, ID 값은 메인 페이지 첫 진입 시 내려주고, 강아지 정보 수정 시 다시 프론트가 해당 API를 재호출해서 다시 받는 구조라는 설정
+    //이거 만드셈
+
     /**
      * 강아지 정보 등록
      * @param member

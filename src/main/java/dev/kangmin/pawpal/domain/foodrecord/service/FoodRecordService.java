@@ -14,6 +14,9 @@ import dev.kangmin.pawpal.domain.member.service.MemberService;
 import dev.kangmin.pawpal.global.error.exception.CustomException;
 import dev.kangmin.pawpal.global.error.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,7 +35,11 @@ public class FoodRecordService {
     private final MemberService memberService;
     private final DogService dogService;
 
-    //강아지의 사료/간식 정보 등록
+    /**
+     * 강아지 사료/간식 정보 등록
+     * @param member
+     * @param foodDto
+     */
     @Transactional
     public void generateFoodRecord(Member member, GenerateFoodDto foodDto) {
         //해당 하는 강아지
@@ -49,42 +56,88 @@ public class FoodRecordService {
         foodRecordRepository.save(foodRecord);
     }
 
-    //수정
+    /**
+     * 강아지 사료/간식 정보 수정
+     * @param modifyFoodDto
+     */
     @Transactional
-    public void modifyFoodRecord(ModifyFoodDto modifyFoodDto) {
-        FoodRecord foodRecord = findFoodRecordByFoodRecordId(modifyFoodDto.getFoodRecordId());
+    public void modifyFoodRecord(Member member, ModifyFoodDto modifyFoodDto) {
+        FoodRecord foodRecord = findFoodRecordByMemberAndFoodRecordId(member, modifyFoodDto.getFoodRecordId());
         foodRecord.modifyFoodRecord(modifyFoodDto);
     }
 
 
-    ///////////////////////////////
-    //강아지 사료/간식 정보 찾기 feat ID
-    public FoodRecord findFoodRecordByFoodRecordId(Long foodRecordId) {
-        return foodRecordRepository.findByFoodRecordId(foodRecordId)
+    /**
+     * 강아지 사료/간식 정보 찾기
+     * @param foodRecordId
+     * @return
+     */
+    public FoodRecord findFoodRecordByMemberAndFoodRecordId(Member member, Long foodRecordId) {
+        return foodRecordRepository.findByMemberAndFoodRecordId(member, foodRecordId)
                 .orElseThrow(() -> new CustomException(BAD_REQUEST, FOOD_INFO_IS_NOT_EXISTS));
     }
 
     //-------------사료/간식 정보 조회
-    //해당 강아지의 사료/간식 전체 정보 조회
-    public List<FoodInfoDto> getMyDogFoodInfoList(String email, Long dogId) {
-        return foodRecordRepository.findFoodInfoDtoListByMemberEmailAndDogId(email, dogId).stream()
-                .map(FoodInfoDto::of)
-                .toList();
+
+    //강아지 이름, ID 값은 메인 페이지 첫 진입 시 내려주고,
+    // 강아지 정보 수정 시 다시 프론트가 해당 API를 재호출해서 다시 받는 구조라는 설정
+    /**
+     * 나의 모든 강아지의 사료/간식 전체 조회
+     * @param member
+     * @param page
+     * @param size
+     * @return
+     */
+    public Page<FoodInfoDto> getMyAllDogsFoodInfoList(Member member, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return foodRecordRepository.findFoodInfoDtoListByMember(member, pageable);
     }
 
-    //선호도 순
-    public List<FoodInfoDto> getMyDogFoodInfoListOrderByPreference(String email, Long dogId) {
-        return foodRecordRepository.findFoodInfoDtoListByMemberEmailAndDogIdOrderByPreference(email, dogId).stream()
-                .map(FoodInfoDto::of)
-                .toList();
+    /**
+     * 사용자의 특정 강아지 사료/간식 정보 전체 조회
+     * @param member
+     * @param dogId
+     * @return
+     */
+    public Page<FoodInfoDto> getMyDogFoodInfoList(Member member, Long dogId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+
+        return foodRecordRepository.findFoodInfoDtoListByMemberAndDogId(member, dogId, pageable);
+//        return foodRecordRepository.findFoodInfoDtoListByMemberAndDogName(member, dogName).stream()
+//                .map(FoodInfoDto::of)
+//                .toList();
     }
 
+    /**
+     * 사용자의 특정 강아지 사료/간식 정보
+     * 선호도 순 조회
+     * @param member
+     * @param dogId
+     * @return
+     */
+    public Page<FoodInfoDto> getMyDogFoodInfoListOrderByPreference(Member member, Long dogId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return foodRecordRepository.findFoodInfoDtoListByMemberAndDogIdOrderByPreference(member, dogId, pageable);
 
-    //사료 간식 세부 정보
-    public FoodDetailDto getMyDodFoodDetail(String email, Long dogId, Long foodRecordId) {
-        return Optional.ofNullable(foodRecordRepository.findByMemberEmailAndDogIdAndFoodRecordId(email, dogId, foodRecordId))
-                .map(FoodDetailDto::of)
-                .orElseThrow(() -> new CustomException(BAD_REQUEST, ErrorCode.FOOD_INFO_IS_NOT_EXISTS));
+//        return foodRecordRepository.findFoodInfoDtoListByMemberAndDogNameOrderByPreference(email, dogId).stream()
+//                .map(FoodInfoDto::of)
+//                .toList();
+    }
+
+    /**
+     * 간식 세부 정보 조회
+     * @param member
+     * @param dogId
+     * @param foodRecordId
+     * @param page
+     * @param size
+     * @return
+     */
+    public FoodDetailDto getMyDodFoodDetail(Member member, Long dogId, Long foodRecordId, int page, int size) {
+        return foodRecordRepository.findDetailByMemberAndDogIdAndFoodRecordId(member, dogId, foodRecordId);
+//        return Optional.ofNullable(foodRecordRepository.findByMemberEmailAndDogIdAndFoodRecordId(email, dogId, foodRecordId))
+//                .map(FoodDetailDto::of)
+//                .orElseThrow(() -> new CustomException(BAD_REQUEST, ErrorCode.FOOD_INFO_IS_NOT_EXISTS));
     }
 
 
@@ -92,8 +145,6 @@ public class FoodRecordService {
     //// 통계 쪽
     //강아지가 1달간 섭취한 사료/간식량 평균(총 섭취량 / 1달)
     //아직 좀 더 생각
-    //
-
     //강아지 음식 선호도 top 5 / worst 5
     public TopWorstFoodDto getTopWorstFoodList(Long dogId) {
         List<FoodRecord> foodRecordList = foodRecordRepository.findFoodListByDogId(dogId);

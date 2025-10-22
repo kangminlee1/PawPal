@@ -13,7 +13,4 @@ import java.util.Optional;
 
 @Repository
 public interface FoodRecordRepository extends JpaRepository<FoodRecord, Long> , FoodRecordRepositoryCustom {
-
-    Optional<FoodRecord> findByFoodRecordId(Long foodRecordId);
-
 }
