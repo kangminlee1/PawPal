@@ -4,8 +4,10 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import dev.kangmin.pawpal.domain.dog.Dog;
 import dev.kangmin.pawpal.domain.dog.QDog;
 import dev.kangmin.pawpal.domain.dog.dto.DogInquiryDto;
+import dev.kangmin.pawpal.domain.dog.dto.DogNameIdDto;
 import dev.kangmin.pawpal.domain.member.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -14,8 +16,10 @@ import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import static dev.kangmin.pawpal.domain.dog.QDog.dog;
+import static dev.kangmin.pawpal.domain.member.QMember.member;
 
 @Repository
 @RequiredArgsConstructor
@@ -28,7 +32,6 @@ public class DogRepositoryImpl implements DogRepositoryCustom{
     public Page<DogInquiryDto> findByMemberAndSortBy(Member member, boolean sortBy, Pageable pageable) {
         List<DogInquiryDto> dogInquiryDtoList = queryFactory
                 .select(Projections.constructor(DogInquiryDto.class,
-                        dog.member.memberId,
                         dog.dogId,
                         dog.name,
                         dog.breed,
@@ -38,7 +41,7 @@ public class DogRepositoryImpl implements DogRepositoryCustom{
                 .where(
                         dog.member.eq(member)
                 )
-                .groupBy(dog.member.memberId, dog.dogId, dog.name, dog.breed, dog.age)
+//                .groupBy(dog.dogId, dog.name, dog.breed, dog.age)
                 .orderBy(
                         sortBy ? dog.age.asc() : dog.age.desc()
                 )
@@ -60,15 +63,16 @@ public class DogRepositoryImpl implements DogRepositoryCustom{
 
         List<DogInquiryDto> dogInquiryDtoList = queryFactory
                 .select(Projections.constructor(DogInquiryDto.class,
-                        dog.member.memberId,
                         dog.dogId,
                         dog.name,
                         dog.breed,
                         dog.age)
                 )
                 .from(dog)
-                .where(dog.member.eq(member))
-                .groupBy(dog.member.memberId, dog.dogId, dog.name, dog.breed,dog.age)
+                .where(
+                        dog.member.eq(member)
+                )
+//                .groupBy(dog.dogId, dog.name, dog.breed,dog.age)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -76,7 +80,9 @@ public class DogRepositoryImpl implements DogRepositoryCustom{
         JPAQuery<Long> countQuery = queryFactory
                 .select(dog.count())
                 .from(dog)
-                .where();
+                .where(
+                        dog.member.eq(member)
+                );
 
         return PageableExecutionUtils.getPage(dogInquiryDtoList, pageable, countQuery::fetchOne);
     }
@@ -86,7 +92,6 @@ public class DogRepositoryImpl implements DogRepositoryCustom{
     public Page<DogInquiryDto> findByMemberAndBreed(Member member, String breed, Pageable pageable) {
         List<DogInquiryDto> dogInquiryDtoList = queryFactory
                 .select(Projections.constructor(DogInquiryDto.class,
-                        dog.member.memberId,
                         dog.dogId,
                         dog.name,
                         dog.breed,
@@ -110,5 +115,64 @@ public class DogRepositoryImpl implements DogRepositoryCustom{
                 );
 
         return PageableExecutionUtils.getPage(dogInquiryDtoList, pageable, countQuery::fetchOne);
+    }
+
+    @Override
+    public List<DogNameIdDto> findDogNameIdListByMember(Member member) {
+        return queryFactory
+                .select(
+                        Projections.constructor(
+                                DogNameIdDto.class,
+                                dog.dogId,
+                                dog.name
+                        )
+                )
+                .from(dog)
+                .where(
+                        dog.member.eq(member)
+                )
+                .fetch();
+    }
+
+    @Override
+    public List<Dog> findAllDogByMember(Member nowMember) {
+        return queryFactory
+                .select(dog)
+                .from(dog)
+                .join(dog.member, member).fetchJoin()
+                .where(
+                        dog.member.eq(nowMember)
+                )
+                .fetch();
+    }
+
+    @Override
+    public Optional<Dog> findByDogId(Long dogId) {
+        return Optional.ofNullable(
+                queryFactory
+                        .select(dog)
+                        .from(dog)
+                        .join(dog.member, member).fetchJoin()
+                        .where(
+                                dog.dogId.eq(dogId)
+                        )
+                        .fetchOne()
+        );
+
+    }
+
+    @Override
+    public Optional<Dog> findByMemberMemberIdAndDogId(Long memberId, Long dogId) {
+        return Optional.ofNullable(
+                queryFactory
+                        .select(dog)
+                        .from(dog)
+                        .join(dog.member, member).fetchJoin()
+                        .where(
+                                dog.member.memberId.eq(memberId),
+                                dog.dogId.eq(dogId)
+                        )
+                        .fetchOne()
+        );
     }
 }

@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class UpdateDogDto {
 
     @NotBlank
-    private Long memberId;
+    private Long dogId;
     @NotBlank
     private String breed;
     @NotBlank

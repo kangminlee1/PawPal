@@ -14,12 +14,12 @@ public class MailService {
     //1세 이하 아기 강아지 달에 1회
     //2~7세 성년 강아지 반년에 1회
     //노령견 3개월에 1회
-    private final JavaMailSender javaMailSender;
-    private final MemberService memberService;
-    private final DogService dogService;
-
-    public void sendCycleHealthCheckReminder() {
-
-    }
+//    private final JavaMailSender javaMailSender;
+//    private final MemberService memberService;
+//    private final DogService dogService;
+//
+//    public void sendCycleHealthCheckReminder() {
+//
+//    }
 
 }

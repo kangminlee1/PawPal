@@ -12,10 +12,4 @@ import java.util.Optional;
 @Repository
 public interface DogRepository extends JpaRepository<Dog, Long>, DogRepositoryCustom {
 
-    Optional<Dog> findByMember(Member member);
-
-    Optional<Dog> findByDogId(Long dogId);
-
-    Optional<Dog> findByMemberMemberIdAndDogId(Long memberId, Long dogId);
-
 }
