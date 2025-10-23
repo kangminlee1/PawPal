@@ -109,8 +109,7 @@ public class DogService {
      * @return
      */
     public List<Dog> findAllDogByMember(Member member) {
-        return dogRepository.findByMember(member)
-                .orElseThrow(() -> new CustomException(BAD_REQUEST, DOG_IS_NOT_EXISTS));
+        return dogRepository.findAllDogByMember(member);
     }
 
     /**
