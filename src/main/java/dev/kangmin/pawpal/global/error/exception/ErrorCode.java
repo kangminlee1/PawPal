@@ -16,6 +16,7 @@ public enum ErrorCode {
 
     //회원
     MEMBER_IS_NOT_EXISTS("사용자가 존재하지 않습니다."),
+    MEMBER_ALREADY_REMOVED("삭제된 사용자 입니다."),
 
     //강아지
     DOG_OWNER_MISMATCH("귀하의 강아지가 아닙니다"),
@@ -35,6 +36,8 @@ public enum ErrorCode {
     //게시판(커뮤니티)
     BOARD_IS_NOT_EXISTS("해당 게시글이 존재하지 않습니다."),
     INVALID_DATE_RANGE("시작 날짜가 종료 날짜보다 더 빨라야 합니다."),
+    BOARD_OWNER_MISMATCH("로그인된 사용자와 게시글 작성자가 다릅니다."),
+    BOARD_ALREADY_REMOVED("삭제된 게시글 입니다."),
 
     //댓글
     COMMENT_OWNER_MISMATCH("로그인된 사용자와 댓글 작성자가 다릅니다."),

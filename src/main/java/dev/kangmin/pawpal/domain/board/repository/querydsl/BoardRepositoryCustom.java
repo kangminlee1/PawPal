@@ -13,7 +13,7 @@ import java.util.Date;
 public interface BoardRepositoryCustom {
     Page<BoardInfoDto> findAllBoardPosts(Pageable pageable);
 
-    Page<BoardInfoDto> findMyBoardByMemberEmail(String email, Pageable pageable);
+    Page<BoardInfoDto> findMyBoardByMember(Member member, Pageable pageable);
 
     Page<BoardInfoDto> findBoardByCreateDateBetween(Pageable pageable, LocalDateTime startDate, LocalDateTime endDate);
 

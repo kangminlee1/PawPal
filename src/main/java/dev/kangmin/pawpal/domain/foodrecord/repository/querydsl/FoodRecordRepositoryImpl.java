@@ -148,7 +148,6 @@ public class FoodRecordRepositoryImpl implements FoodRecordRepositoryCustom{
     @Override
     public List<FoodRecord> findFoodListByDogId(Long dogId) {
 
-
         return null;
     }
 

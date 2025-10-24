@@ -33,9 +33,9 @@ public class Board {
     @Enumerated(EnumType.STRING)
     private ExistStatus existStatus;
 
-    private int viewCount;
+    private int viewCount = 0;
     //조언 -> 좋아요 수 집계도 미리 해두면 더 빠르다.
-    private int likeCount;
+    private int likeCount = 0;
 
 
     @CreatedDate
@@ -68,6 +68,7 @@ public class Board {
     public void addLike() {
         this.likeCount++;
     }
+
     public void removeLike() {
         if (this.likeCount > 0) {
             this.likeCount--;

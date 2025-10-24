@@ -6,6 +6,7 @@ import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import dev.kangmin.pawpal.domain.board.dto.BoardInfoDto;
 import dev.kangmin.pawpal.domain.enums.ExistStatus;
+import dev.kangmin.pawpal.domain.member.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -38,17 +39,9 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
                         board.viewCount,
                         board.member.name,
                         board.likeCount
-//                        Expressions.numberTemplate(Long.class,
-//                                        "sum(case when {0} = {1} then 1 else 0 end)",
-//                                        myLike.existStatus,
-//                                        ExistStatus.EXISTS)
-//                                .coalesce(0L)
-//                                .intValue()
                 ))
                 .from(board)
-//                .leftJoin(myLike).on(myLike.board.eq(board))
                 .where(board.existStatus.eq(ExistStatus.EXISTS))
-//                .groupBy(board.boardId, board.title, board.createDate, board.viewCount, board.member.name)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -63,7 +56,7 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
 
     //내가 쓴 게시글 목록
     @Override
-    public Page<BoardInfoDto> findMyBoardByMemberEmail(String email, Pageable pageable) {
+    public Page<BoardInfoDto> findMyBoardByMember(Member member, Pageable pageable) {
 
         List<BoardInfoDto> boardInfoDtoList = queryFactory
                 .select(Projections.constructor(BoardInfoDto.class,
@@ -73,20 +66,12 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
                         board.viewCount,
                         board.member.name,
                         board.likeCount
-//                                Expressions.numberTemplate(Long.class,
-//                                                "sum(case when {0} = {1} then 1 else 0 end)",
-//                                                myLike.existStatus,
-//                                                ExistStatus.EXISTS)
-//                                        .coalesce(0L)
-//                                        .intValue()
                 ))
                 .from(board)
-//                .leftJoin(myLike).on(myLike.board.eq(board))
                 .where(
-                        board.member.email.eq(email),
+                        board.member.eq(member),
                         board.existStatus.eq(ExistStatus.EXISTS)
                 )
-//                .groupBy(board.boardId, board.title, board.createDate, board.viewCount, board.member.name)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -95,7 +80,7 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
                 .select(board.count())
                 .from(board)
                 .where(board.existStatus.eq(ExistStatus.EXISTS),
-                        board.member.email.eq(email));
+                        board.member.eq(member));
 
         return PageableExecutionUtils.getPage(boardInfoDtoList, pageable, countQuery::fetchOne);
     }
@@ -111,20 +96,12 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
                         board.viewCount,
                         board.member.name,
                         board.likeCount
-//                                Expressions.numberTemplate(Long.class,
-//                                                "sum(case when {0} = {1} then 1 else 0 end)",
-//                                                myLike.existStatus,
-//                                                ExistStatus.EXISTS)
-//                                        .coalesce(0L)
-//                                        .intValue()
                 ))
                 .from(board)
-//                .leftJoin(myLike).on(myLike.board.eq(board))
                 .where(
                         board.existStatus.eq(ExistStatus.EXISTS),
                         board.createDate.between(startDate, endDate)
                 )
-//                .groupBy(board.boardId, board.title, board.createDate, board.viewCount, board.member.name)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -152,19 +129,12 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
                         board.viewCount,
                         board.member.name,
                         board.likeCount
-//                                Expressions.numberTemplate(Long.class,
-//                                                "sum(case when {0} = {1} then 1 else 0 end)",
-//                                                myLike.existStatus,
-//                                                ExistStatus.EXISTS)
-//                                        .coalesce(0L)
-//                                        .intValue()
+
                 ))
                 .from(board)
-//                .leftJoin(myLike).on(myLike.board.eq(board))
                 .where(
                         board.existStatus.eq(ExistStatus.EXISTS)
                 )
-//                .groupBy(board.boardId, board.title, board.createDate, board.viewCount, board.member.name)
                 .orderBy(board.viewCount.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -191,19 +161,11 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
                                 board.viewCount,
                                 board.member.name,
                                 board.likeCount
-//                                Expressions.numberTemplate(Long.class,
-//                                                "sum(case when {0} = {1} then 1 else 0 end)",
-//                                                myLike.existStatus,
-//                                                ExistStatus.EXISTS)
-//                                        .coalesce(0L)
-//                                        .intValue()
                         ))
                 .from(board)
-//                .leftJoin(myLike).on(myLike.board.eq(board))
                 .where(
                         board.existStatus.eq(ExistStatus.EXISTS)
                 )
-//                .groupBy(board.boardId, board.title, board.createDate, board.viewCount, board.member.name)
                 .orderBy(
                         Expressions.numberTemplate(
                                 Long.class,
@@ -241,21 +203,13 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
                                 board.viewCount,
                                 board.member.name,
                                 board.likeCount
-//                                Expressions.numberTemplate(Long.class,
-//                                                "sum(case when {0} = {1} then 1 else 0 end)",
-//                                                myLike.existStatus,
-//                                                ExistStatus.EXISTS)
-//                                        .coalesce(0L)
-//                                        .intValue()
                         )
                 )
                 .from(board)
-//                .leftJoin(myLike).on(myLike.board.eq(board))
                 .where(
                         board.existStatus.eq(ExistStatus.EXISTS),
                         board.title.containsIgnoreCase(title)
                 )
-//                .groupBy(board.boardId, board.title, board.createDate, board.viewCount, board.member.name)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -282,21 +236,13 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
                                 board.viewCount,
                                 board.member.name,
                                 board.likeCount
-//                                Expressions.numberTemplate(Long.class,
-//                                                "sum(case when {0} = {1} then 1 else 0 end)",
-//                                                myLike.existStatus,
-//                                                ExistStatus.EXISTS)
-//                                        .coalesce(0L)
-//                                        .intValue()
                         )
                 )
                 .from(board)
-//                .leftJoin(myLike).on(myLike.board.eq(board))
                 .where(
                         board.existStatus.eq(ExistStatus.EXISTS),
                         board.title.containsIgnoreCase(keyword).or(board.content.containsIgnoreCase(keyword))
                 )
-//                .groupBy(board.boardId, board.title, board.createDate, board.viewCount, board.member.name)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -325,19 +271,14 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
                                 board.viewCount,
                                 board.member.name,
                                 board.likeCount
-//                                Expressions.numberTemplate(Long.class,
-//                                        "sum(case when {0} = {1} then 1 else 0 end)",
-//                                        myLike.existStatus,
-//                                        ExistStatus.EXISTS)
+
                         )
                 )
                 .from(board)
-//                .leftJoin(myLike).on(myLike.board.eq(board))
                 .where(
                         board.existStatus.eq(ExistStatus.EXISTS),
                         board.content.containsIgnoreCase(content)
                 )
-//                .groupBy(board.boardId, board.title, board.createDate, board.viewCount, board.member.name)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
