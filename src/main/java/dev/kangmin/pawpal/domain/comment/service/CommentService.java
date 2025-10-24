@@ -14,6 +14,7 @@ import dev.kangmin.pawpal.global.error.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import static dev.kangmin.pawpal.global.error.exception.ErrorCode.*;
 import static org.springframework.http.HttpStatus.*;
@@ -35,6 +36,12 @@ public class CommentService {
                 .orElseThrow(() -> new CustomException(BAD_REQUEST, COMMENT_IS_NOT_EXISTS));
     }
 
+    public Comment findByParentId(Long parentId) {
+        return commentRepository.findByParentId(parentId)
+                .orElseThrow(() -> new CustomException(BAD_REQUEST, COMMENT_IS_NOT_EXISTS));
+
+    }
+
     /**
      * 댓글 생성
      * 일반 댓글
@@ -44,15 +51,11 @@ public class CommentService {
      * @param boardId
      * @return
      */
-    public CommentDto generateComment(CommentDto commentDto, Member member, Long boardId) {
+    @Transactional
+    public void generateComment(CommentDto commentDto, Member member, Long boardId) {
         Board board = boardService.findByBoardId(boardId);
 
 //        //현재 로그인된 사람과 작성된 댓글의 사용자와 같은지 검증 -> 이미 jwt 검증을 하기에 필요 없음
-//        if(!member.getMemberId().equals(commentDto.getMemberId())){
-//            //다를 경우 -> 인증 OK , 권한 X
-//            throw  new CustomException(FORBIDDEN, UNAUTHORIZED_MEMBER);
-//        }
-
         Comment newComment;
 
         if (commentDto.getParentId() == null) {
@@ -65,12 +68,7 @@ public class CommentService {
                     .build();
         }else{
             //대댓글
-            Comment parentComment = commentRepository.findByParentId(commentDto.getParentId());
-
-            if (parentComment == null) {
-                //대댓글의 부모 정보가 누락일 경우
-
-            }
+            Comment parentComment = findByParentId(commentDto.getParentId());
 
             newComment = Comment.builder()
                     .content(commentDto.getContent())
@@ -83,7 +81,7 @@ public class CommentService {
 
         //댓글 작성하면 바로 내가 작성한 내용 보여주기(프론트랑 합의 본 설정)
         commentRepository.save(newComment);
-        return CommentDto.of(newComment);
+//        return CommentDto.of(newComment);
     }
 
     /**
@@ -91,6 +89,7 @@ public class CommentService {
      * @param updateCommentDto
      * @param member
      */
+    @Transactional
     public void deleteComment(UpdateCommentDto updateCommentDto, Member member) {
         Comment comment = findByCommentId(updateCommentDto.getCommentId());
 
@@ -107,6 +106,7 @@ public class CommentService {
      * @param updateCommentDto
      * @param member
      */
+    @Transactional
     public void modifyComment(UpdateCommentDto updateCommentDto, Member member) {
         Comment comment = findByCommentId(updateCommentDto.getCommentId());
 
@@ -117,7 +117,4 @@ public class CommentService {
 
         comment.modifiedComment(updateCommentDto.getContent());
     }
-
-
-
 }

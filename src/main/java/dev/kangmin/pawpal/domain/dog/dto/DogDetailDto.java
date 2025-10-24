@@ -1,12 +1,17 @@
 package dev.kangmin.pawpal.domain.dog.dto;
 
 import dev.kangmin.pawpal.domain.dog.Dog;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class DogDetailDto {
+
     private Long dogId;
     private String breed;
     private String name;

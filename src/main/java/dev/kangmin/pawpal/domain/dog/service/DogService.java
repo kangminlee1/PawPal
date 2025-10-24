@@ -143,8 +143,6 @@ public class DogService {
         return dogRepository.findDogListByMember(member, pageable);
     }
 
-
-    //query DSL로 밑에 해결하자
     /**
      * 내 강아지의 견종 별 조회
      *
@@ -158,7 +156,6 @@ public class DogService {
         return dogRepository.findByMemberAndBreed(member, breed, pageable);
     }
 
-    //query DSL로 밑에 해결하자
     /**
      * 사용자의 강아지 나이 순 정렬
      *
