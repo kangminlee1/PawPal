@@ -3,6 +3,8 @@ package dev.kangmin.pawpal.domain.foodrecord.repository.querydsl;
 import dev.kangmin.pawpal.domain.foodrecord.FoodRecord;
 import dev.kangmin.pawpal.domain.foodrecord.dto.FoodDetailDto;
 import dev.kangmin.pawpal.domain.foodrecord.dto.FoodInfoDto;
+import dev.kangmin.pawpal.domain.foodrecord.dto.stats.FoodCountDto;
+import dev.kangmin.pawpal.domain.foodrecord.dto.stats.FoodTypeNameDto;
 import dev.kangmin.pawpal.domain.member.Member;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,8 +23,12 @@ public interface FoodRecordRepositoryCustom {
 
     Page<FoodInfoDto> findFoodInfoDtoListByMemberAndDogIdOrderByPreference(Member member, Long dogId, Pageable pageable);
 
-    List<FoodRecord> findFoodListByDogId(Long dogId);
-
     FoodDetailDto findDetailByMemberAndDogIdAndFoodRecordId(Member member, Long dogId, Long foodRecordId);
+
+    List<FoodTypeNameDto> findFoodTypeNameDtoListByDogIdOrderByUpper(Long dogId);
+
+    List<FoodTypeNameDto> findFoodTypeNameDtoListByDogIdOrderByLower(Long dogId);
+
+    List<FoodCountDto> findFoodListByDogId(Long dogId);
 
 }

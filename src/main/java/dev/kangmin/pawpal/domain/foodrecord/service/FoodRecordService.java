@@ -3,8 +3,10 @@ package dev.kangmin.pawpal.domain.foodrecord.service;
 
 import dev.kangmin.pawpal.domain.dog.Dog;
 import dev.kangmin.pawpal.domain.dog.service.DogService;
+import dev.kangmin.pawpal.domain.enums.FoodType;
 import dev.kangmin.pawpal.domain.foodrecord.FoodRecord;
 import dev.kangmin.pawpal.domain.foodrecord.dto.*;
+import dev.kangmin.pawpal.domain.foodrecord.dto.stats.FoodCountDto;
 import dev.kangmin.pawpal.domain.foodrecord.dto.stats.FoodRatioDto;
 import dev.kangmin.pawpal.domain.foodrecord.dto.stats.FoodTypeNameDto;
 import dev.kangmin.pawpal.domain.foodrecord.dto.stats.TopWorstFoodDto;
@@ -37,6 +39,7 @@ public class FoodRecordService {
 
     /**
      * 강아지 사료/간식 정보 등록
+     *
      * @param member
      * @param foodDto
      */
@@ -58,6 +61,7 @@ public class FoodRecordService {
 
     /**
      * 강아지 사료/간식 정보 수정
+     *
      * @param modifyFoodDto
      */
     @Transactional
@@ -69,6 +73,7 @@ public class FoodRecordService {
 
     /**
      * 강아지 사료/간식 정보 찾기
+     *
      * @param foodRecordId
      * @return
      */
@@ -81,8 +86,10 @@ public class FoodRecordService {
 
     //강아지 이름, ID 값은 메인 페이지 첫 진입 시 내려주고,
     // 강아지 정보 수정 시 다시 프론트가 해당 API를 재호출해서 다시 받는 구조라는 설정
+
     /**
      * 나의 모든 강아지의 사료/간식 전체 조회
+     *
      * @param member
      * @param page
      * @param size
@@ -95,6 +102,7 @@ public class FoodRecordService {
 
     /**
      * 사용자의 특정 강아지 사료/간식 정보 전체 조회
+     *
      * @param member
      * @param dogId
      * @return
@@ -111,6 +119,7 @@ public class FoodRecordService {
     /**
      * 사용자의 특정 강아지 사료/간식 정보
      * 선호도 순 조회
+     *
      * @param member
      * @param dogId
      * @return
@@ -126,6 +135,7 @@ public class FoodRecordService {
 
     /**
      * 간식 세부 정보 조회
+     *
      * @param member
      * @param dogId
      * @param foodRecordId
@@ -141,35 +151,25 @@ public class FoodRecordService {
     }
 
 
-
     //// 통계 쪽
     //강아지가 1달간 섭취한 사료/간식량 평균(총 섭취량 / 1달)
     //아직 좀 더 생각
-    //강아지 음식 선호도 top 5 / worst 5
-    public TopWorstFoodDto getTopWorstFoodList(Long dogId) {
-        List<FoodRecord> foodRecordList = foodRecordRepository.findFoodListByDogId(dogId);
 
+    //개선 -> stream에서 queryDSL
+
+    /**
+     * 강아지 음식 선호도 top / worst 5
+     * 5개 이하 일 경우 있는 만큼만 보여줌
+     *
+     * @param dogId
+     * @return
+     */
+    public TopWorstFoodDto getTopWorstFoodList(Long dogId) {
         //가장 선호하는 top 5 사료 및 간식
-        List<FoodTypeNameDto> favorFoodList = foodRecordList.stream()
-                .sorted(Comparator.comparing(FoodRecord::getPreference).reversed())
-                .filter(food -> food.getPreference() >= 7)
-                .limit(5)
-                .map(food -> FoodTypeNameDto.builder()
-                        .foodName(food.getName())
-                        .foodType(food.getType())
-                        .build())
-                .toList();
+        List<FoodTypeNameDto> favorFoodList = foodRecordRepository.findFoodTypeNameDtoListByDogIdOrderByUpper(dogId);
 
         //가장 선호도가 낮은 top 5 사료 및 간식
-        List<FoodTypeNameDto> worstFoodList = foodRecordList.stream()
-                .sorted(Comparator.comparing(FoodRecord::getPreference))
-                .filter(food -> food.getPreference() <= 3)
-                .limit(5)
-                .map(food -> FoodTypeNameDto.builder()
-                        .foodName(food.getName())
-                        .foodType(food.getType())
-                        .build())
-                .toList();
+        List<FoodTypeNameDto> worstFoodList = foodRecordRepository.findFoodTypeNameDtoListByDogIdOrderByLower(dogId);
 
         return TopWorstFoodDto.builder()
                 .bestFoodTypeNameDtoList(favorFoodList)
@@ -180,28 +180,26 @@ public class FoodRecordService {
 
     //간식 / 사료 비율 -> 간식/사료 세부 정보 보여줄때 같이 넘겨줄 정보
     public FoodRatioDto getMyDogFoodRatio(Long dogId) {
-        List<FoodRecord> foodRecordList = foodRecordRepository.findFoodListByDogId(dogId);
+        List<FoodCountDto> foodCountDtoList = foodRecordRepository.findFoodListByDogId(dogId);
 
-        long treatCount = foodRecordList.stream()
-                .filter(n -> "TREAT".equals(n.getType().name()))
-                .count();
-
-        long foodCount = foodRecordList.stream()
-                .filter(n -> "FOOD".equals(n.getType().name()))
-                .count();
-        long total = treatCount + foodCount;
-
-        double foodRatio = 0;
-        double treatRatio = 0;
-        if (total>0) {
-            foodRatio = (double) foodCount / total * 100;
-            treatRatio = (double) treatCount / total * 100;
+        long feedCount = 0, treatCount = 0;
+        for (FoodCountDto foodCountDto : foodCountDtoList) {
+            if (foodCountDto.getFoodType().equals(FoodType.TREAT)) {
+                treatCount = foodCountDto.getCount();
+            } else if (foodCountDto.getFoodType().equals(FoodType.FEED)) {
+                feedCount = foodCountDto.getCount();
+            }
         }
-            return FoodRatioDto.builder()
-                    .foodRatio(foodRatio)
-                    .treatRatio(treatRatio)
-                    .build();
 
+        long total = treatCount + feedCount;
+
+        double feedRatio = total > 0 ? (double) feedCount / total * 100 : 0;
+        double treatRatio = total > 0 ? (double) treatCount / total * 100 : 0;
+
+        return FoodRatioDto.builder()
+                .feedRatio(feedRatio)
+                .treatRatio(treatRatio)
+                .build();
     }
 
 }

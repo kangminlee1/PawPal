@@ -33,8 +33,10 @@ public class Board {
     @Enumerated(EnumType.STRING)
     private ExistStatus existStatus;
 
+    @Builder.Default
     private int viewCount = 0;
     //조언 -> 좋아요 수 집계도 미리 해두면 더 빠르다.
+    @Builder.Default
     private int likeCount = 0;
 
 

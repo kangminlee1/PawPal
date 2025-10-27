@@ -6,6 +6,8 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import dev.kangmin.pawpal.domain.foodrecord.FoodRecord;
 import dev.kangmin.pawpal.domain.foodrecord.dto.FoodDetailDto;
 import dev.kangmin.pawpal.domain.foodrecord.dto.FoodInfoDto;
+import dev.kangmin.pawpal.domain.foodrecord.dto.stats.FoodCountDto;
+import dev.kangmin.pawpal.domain.foodrecord.dto.stats.FoodTypeNameDto;
 import dev.kangmin.pawpal.domain.member.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -144,12 +146,7 @@ public class FoodRecordRepositoryImpl implements FoodRecordRepositoryCustom{
         return PageableExecutionUtils.getPage(foodRecordList, pageable, countQuery::fetchOne);
     }
 
-    //보류 수정해야함
-    @Override
-    public List<FoodRecord> findFoodListByDogId(Long dogId) {
 
-        return null;
-    }
 
 
     @Override
@@ -179,4 +176,69 @@ public class FoodRecordRepositoryImpl implements FoodRecordRepositoryCustom{
                 )
                 .fetchOne();
     }
+
+
+
+    @Override
+    public List<FoodTypeNameDto> findFoodTypeNameDtoListByDogIdOrderByUpper(Long dogId) {
+        return queryFactory
+                .select(
+                        Projections.constructor(
+                                FoodTypeNameDto.class,
+                                foodRecord.name,
+                                foodRecord.type
+                        )
+                )
+                .from(foodRecord)
+                .where(
+                        foodRecord.dog.dogId.eq(dogId),
+                        foodRecord.preference.goe(7)
+                )
+                .orderBy(
+                        foodRecord.preference.desc()
+                )
+                .limit(5)
+                .fetch();
+    }
+
+    @Override
+    public List<FoodTypeNameDto> findFoodTypeNameDtoListByDogIdOrderByLower(Long dogId) {
+        return queryFactory
+                .select(
+                        Projections.constructor(
+                                FoodTypeNameDto.class,
+                                foodRecord.name,
+                                foodRecord.type
+                        )
+                )
+                .from(foodRecord)
+                .where(
+                        foodRecord.dog.dogId.eq(dogId),
+                        foodRecord.preference.loe(3)
+                )
+                .orderBy(
+                        foodRecord.preference.asc()
+                )
+                .limit(5)
+                .fetch();
+    }
+
+    @Override
+    public List<FoodCountDto> findFoodListByDogId(Long dogId) {
+        return queryFactory
+                .select(
+                        Projections.constructor(
+                                FoodCountDto.class,
+                                foodRecord.type,
+                                foodRecord.count()
+                        )
+                )
+                .from(foodRecord)
+                .where(
+                        foodRecord.dog.dogId.eq(dogId)
+                )
+                .groupBy(foodRecord.type)
+                .fetch();
+    }
+
 }
