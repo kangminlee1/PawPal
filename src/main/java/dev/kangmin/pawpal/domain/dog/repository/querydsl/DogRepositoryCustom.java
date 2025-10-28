@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,5 +29,6 @@ public interface DogRepositoryCustom {
 
     Optional<Dog> findByMemberMemberIdAndDogId(Long memberId, Long dogId);
 
+    List<Dog> findAllByNextHealthCheckDateBefore(LocalDateTime localDateTime);
 }
 

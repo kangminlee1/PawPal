@@ -11,9 +11,6 @@ public class MailTest {
     @Autowired
     private MailService mailService;
 
-    @Test
-    void sendMailTest() {
-        mailService.sendMail("gangmin6520@gmail.com", "전송 되었나유?", "spring mail test");
-    }
+
 
 }

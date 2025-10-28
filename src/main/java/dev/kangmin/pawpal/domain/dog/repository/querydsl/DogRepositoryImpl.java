@@ -15,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,7 +24,7 @@ import static dev.kangmin.pawpal.domain.member.QMember.member;
 
 @Repository
 @RequiredArgsConstructor
-public class DogRepositoryImpl implements DogRepositoryCustom{
+public class DogRepositoryImpl implements DogRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
 
@@ -139,7 +140,7 @@ public class DogRepositoryImpl implements DogRepositoryCustom{
         return queryFactory
                 .select(dog)
                 .from(dog)
-                .join(dog.member, member).fetchJoin()
+                .leftJoin(dog.member, member).fetchJoin()
                 .where(
                         dog.member.eq(nowMember)
                 )
@@ -152,7 +153,7 @@ public class DogRepositoryImpl implements DogRepositoryCustom{
                 queryFactory
                         .select(dog)
                         .from(dog)
-                        .join(dog.member, member).fetchJoin()
+                        .leftJoin(dog.member, member).fetchJoin()
                         .where(
                                 dog.dogId.eq(dogId)
                         )
@@ -167,7 +168,7 @@ public class DogRepositoryImpl implements DogRepositoryCustom{
                 queryFactory
                         .select(dog)
                         .from(dog)
-                        .join(dog.member, member).fetchJoin()
+                        .leftJoin(dog.member, member).fetchJoin()
                         .where(
                                 dog.member.memberId.eq(memberId),
                                 dog.dogId.eq(dogId)
@@ -175,4 +176,19 @@ public class DogRepositoryImpl implements DogRepositoryCustom{
                         .fetchOne()
         );
     }
+
+    @Override
+    public List<Dog> findAllByNextHealthCheckDateBefore(LocalDateTime now) {
+        return queryFactory
+                .select(dog)
+                .from(dog)
+                .leftJoin(dog.member, member).fetchJoin()
+                .where(
+                        dog.age.loe(1).and(dog.nextHealthCheckDate.loe(now))
+                                .or(dog.age.between(2, 6).and(dog.nextHealthCheckDate.loe(now)))
+                                .or(dog.age.goe(7).and(dog.nextHealthCheckDate.loe(now)))
+                )
+                .fetch();
+    }
+
 }

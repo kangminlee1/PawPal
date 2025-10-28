@@ -41,10 +41,12 @@ public enum ErrorCode {
 
     //댓글
     COMMENT_OWNER_MISMATCH("로그인된 사용자와 댓글 작성자가 다릅니다."),
-    COMMENT_IS_NOT_EXISTS("해당 댓글이 존재하지 않습니다.");
+    COMMENT_IS_NOT_EXISTS("해당 댓글이 존재하지 않습니다."),
 
     //좋아요
 
+    //메일
+    SEND_MAIL_ERROR("메일 발송 중 오류 발생.");
 
     private final String errorMessage;
     ErrorCode(String errorMessage){

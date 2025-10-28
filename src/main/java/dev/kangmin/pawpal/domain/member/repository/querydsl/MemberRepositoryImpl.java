@@ -12,6 +12,7 @@ import java.util.List;
 
 import static dev.kangmin.pawpal.domain.board.QBoard.board;
 import static dev.kangmin.pawpal.domain.comment.QComment.comment;
+import static dev.kangmin.pawpal.domain.dog.QDog.dog;
 import static dev.kangmin.pawpal.domain.member.QMember.member;
 import static dev.kangmin.pawpal.domain.mylike.QMyLike.myLike;
 
