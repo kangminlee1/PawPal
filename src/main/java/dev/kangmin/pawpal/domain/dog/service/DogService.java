@@ -4,6 +4,7 @@ import dev.kangmin.pawpal.domain.dog.Dog;
 import dev.kangmin.pawpal.domain.dog.dto.*;
 import dev.kangmin.pawpal.domain.dog.repository.DogRepository;
 import dev.kangmin.pawpal.domain.enums.ExistStatus;
+import dev.kangmin.pawpal.domain.healthrecord.repository.HealthRecordRepository;
 import dev.kangmin.pawpal.domain.member.Member;
 import dev.kangmin.pawpal.domain.member.service.MemberService;
 import dev.kangmin.pawpal.global.error.exception.CustomException;
@@ -26,12 +27,11 @@ import static org.springframework.http.HttpStatus.*;
 public class DogService {
 
     private final DogRepository dogRepository;
-    private final MemberService memberService;
+    private final HealthRecordRepository healthRecordRepository;
 
     //강아지 이름, ID 값은 메인 페이지 첫 진입 시 내려주고,
     //강아지 정보 수정 시 다시 프론트가 해당 API를 재호출해서 다시 받는 구조라는 설정
     //이거 만드셈
-
     //강아지 정보 등록 및 수정 시 사용자의 모든 강아지의 이름, id 값 반환
 
     /**
@@ -180,5 +180,14 @@ public class DogService {
         return DogDetailDto.of(findDogByMemberIdAndDogId(member.getMemberId(), dogId));
     }
 
+    /**
+     * 강아지 세부 페이지 처음 접속 했을 때
+     */
+    public DogDetailWithWeightDto getMyDogDetails(Member member, Long dogId) {
+        return DogDetailWithWeightDto.builder()
+                .dogDetailDto(getMyDogDetailInfo(member, dogId))
+                .dogWeightDtoList(healthRecordRepository.findWeightChangeStaticsByMemberIdAndDogId(member.getMemberId(), dogId))
+                .build();
 
+    }
 }
