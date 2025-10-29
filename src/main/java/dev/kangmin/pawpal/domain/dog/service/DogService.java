@@ -180,4 +180,5 @@ public class DogService {
         return DogDetailDto.of(findDogByMemberIdAndDogId(member.getMemberId(), dogId));
     }
 
+
 }

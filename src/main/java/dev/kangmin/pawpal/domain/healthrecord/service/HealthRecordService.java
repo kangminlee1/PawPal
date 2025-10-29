@@ -1,6 +1,7 @@
 package dev.kangmin.pawpal.domain.healthrecord.service;
 
 import dev.kangmin.pawpal.domain.dog.Dog;
+import dev.kangmin.pawpal.domain.dog.dto.DogWeightDto;
 import dev.kangmin.pawpal.domain.dog.service.DogService;
 import dev.kangmin.pawpal.domain.healthrecord.HealthRecord;
 import dev.kangmin.pawpal.domain.healthrecord.dto.HealthDetailDto;
@@ -10,11 +11,13 @@ import dev.kangmin.pawpal.domain.healthrecord.repository.HealthRecordRepository;
 import dev.kangmin.pawpal.domain.member.Member;
 import dev.kangmin.pawpal.domain.member.service.MemberService;
 import dev.kangmin.pawpal.global.error.exception.CustomException;
+import dev.kangmin.pawpal.global.error.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -168,4 +171,30 @@ public class HealthRecordService {
         //querydsl로 N+1 해결(fetchJoin
         return HealthDetailDto.of(findMyDogHealthRecordByMemberAndHealthRecordId(member, healthRecordId));
     }
+
+    //강아지 건강 검진 통계
+
+    /**
+     * 강아지 몸무게 통계 -> 기본
+     * 최근 6건
+     * @param member
+     * @param dogId
+     * @return
+     */
+    public List<DogWeightDto> getDogWeightChangeStatistics(Member member, Long dogId) {
+        return healthRecordRepository.findWeightChangeStaticsByMemberIdAndDogId(member.getMemberId(), dogId);
+    }
+
+    /**
+     * 강아지 몸무게 통계 -> 특정 개월 수 기준
+     * 현재부터 3, 6, 12개월 전까지 탐색 가능
+     * @param member
+     * @param dogId
+     * @param month
+     * @return
+     */
+    public List<DogWeightDto> getDogWeightChangeStatisticsByLastMonth(Member member, Long dogId, int month) {
+        return healthRecordRepository.findWeightChangeStaticsByMemberIdAndDogIdAndMonth(member.getMemberId(), dogId, month);
+    }
+
 }

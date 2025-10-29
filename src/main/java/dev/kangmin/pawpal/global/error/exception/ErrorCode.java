@@ -20,7 +20,7 @@ public enum ErrorCode {
 
     //강아지
     DOG_OWNER_MISMATCH("귀하의 강아지가 아닙니다"),
-    DOG_IS_NOT_EXISTS("귀하의 강아지가 존재하지 않습니다."),
+    DOG_IS_NOT_EXISTS("해당 강아지가 존재하지 않습니다."),
 
     //강아지 예방 접종
     VACCINE_IS_NOT_EXISTS("예방접종 기록이 없습니다."),

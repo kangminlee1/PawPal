@@ -1,5 +1,7 @@
 package dev.kangmin.pawpal.domain.healthrecord.repository.querydsl;
 
+import dev.kangmin.pawpal.domain.dog.Dog;
+import dev.kangmin.pawpal.domain.dog.dto.DogWeightDto;
 import dev.kangmin.pawpal.domain.healthrecord.HealthRecord;
 import dev.kangmin.pawpal.domain.healthrecord.dto.HealthInquiryDto;
 import dev.kangmin.pawpal.domain.member.Member;
@@ -21,4 +23,8 @@ public interface HealthRecordRepositoryCustom {
     Page<HealthInquiryDto> findByMemberOrderByCreateDate(Member member, Boolean sortBy, Pageable pageable);
 
     Page<HealthInquiryDto> findByMemberAndDogName(Member member, String dogName, Boolean sortBy, Pageable pageable);
+
+    List<DogWeightDto> findWeightChangeStaticsByMemberIdAndDogId(Long memberId, Long dogId);
+
+    List<DogWeightDto> findWeightChangeStaticsByMemberIdAndDogIdAndMonth(Long memberId, Long dogId, int month);
 }

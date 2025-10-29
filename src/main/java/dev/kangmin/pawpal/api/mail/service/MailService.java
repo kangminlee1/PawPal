@@ -84,6 +84,7 @@ public class MailService {
             }else{
                 nextDate = now.plusMonths(3);
             }
+            dog.modifiedDate(dog.getLastHealthCheckDate(), nextDate);
         }
 
         dogList.parallelStream().forEach(dog -> {
