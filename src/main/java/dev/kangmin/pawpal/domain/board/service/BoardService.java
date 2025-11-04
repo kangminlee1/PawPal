@@ -55,6 +55,12 @@ public class BoardService {
     }
 
     //등록
+
+    /**
+     * 게시글 등록
+     * @param member
+     * @param generateBoardDto
+     */
     @Transactional
     public void generateBoard(Member member, GenerateBoardDto generateBoardDto) {
         if (member.getExistStatus().equals(ExistStatus.DELETED)) {
@@ -70,7 +76,11 @@ public class BoardService {
         boardRepository.save(board);
     }
 
-    //수정
+    /**
+     * 게시글 수정
+     * @param member
+     * @param modifyBoardDto
+     */
     @Transactional
     public void modifyBoard(Member member, ModifyBoardDto modifyBoardDto) {
         Board board = findByBoardId(modifyBoardDto.getBoardId());
@@ -85,6 +95,11 @@ public class BoardService {
     }
 
     //삭제 -> 아직은 삭제시지 않음 복구 가능성 존재( 추후 완전 삭제를 할지말지 결정하자)
+    /**
+     * 게시글 삭제
+     * @param member
+     * @param boardId
+     */
     @Transactional
     public void deleteBoard(Member member, Long boardId) {
         Board board = findByBoardId(boardId);

@@ -2,6 +2,7 @@ package dev.kangmin.pawpal.domain.comment.repository.querydsl;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import dev.kangmin.pawpal.domain.comment.Comment;
+import dev.kangmin.pawpal.domain.member.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -37,5 +38,14 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom {
                 )
                 .fetchOne()
         );
+    }
+
+    @Override
+    public void updateCommentWriterToDeleted(Member member, Member deletedMember) {
+        queryFactory
+                .update(comment)
+                .set(comment.member, deletedMember)
+                .where(comment.member.eq(member))
+                .execute();
     }
 }

@@ -91,15 +91,16 @@ public class DogService {
      * @param updateDogDto
      */
     @Transactional
-    public List<DogNameIdDto> deleteDogInfo(Member member, UpdateDogDto updateDogDto) {
+    public void deleteDogInfo(Member member, UpdateDogDto updateDogDto) {
         Dog findDog = findDogByDogId(updateDogDto.getDogId());
         //나의 강아지 정보가 맞는지 검증
         if (!findDog.getMember().getMemberId().equals(member.getMemberId())) {
             throw new CustomException(FORBIDDEN, DOG_OWNER_MISMATCH);
         }
 
-        findDogByMemberIdAndDogId(member.getMemberId(), updateDogDto.getDogId()).change(ExistStatus.DELETED);
-        return getDogNameAndDogIdList(member);
+        dogRepository.delete(findDog);
+//        findDogByMemberIdAndDogId(member.getMemberId(), updateDogDto.getDogId()).change(ExistStatus.DELETED);
+//        return getDogNameAndDogIdList(member);
     }
 
     //강아지 정보 찾기
@@ -188,6 +189,5 @@ public class DogService {
                 .dogDetailDto(getMyDogDetailInfo(member, dogId))
                 .dogWeightDtoList(healthRecordRepository.findWeightChangeStaticsByMemberIdAndDogId(member.getMemberId(), dogId))
                 .build();
-
     }
 }

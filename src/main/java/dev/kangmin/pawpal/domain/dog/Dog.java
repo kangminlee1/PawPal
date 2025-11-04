@@ -45,8 +45,8 @@ public class Dog {
     private LocalDateTime updateDate;
 
     //건강 검진 일
-    private LocalDateTime lastHealthCheckDate;
-    private LocalDateTime nextHealthCheckDate;
+//    private LocalDateTime lastHealthCheckDate;
+//    private LocalDateTime nextHealthCheckDate;
 
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -32,34 +32,4 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom{
                 )
                 .fetch();
     }
-
-    @Override
-    @Transactional
-    public long anonymizeBoardsAndComments(Member member, Member deleteMember) {
-
-        long boardCount = queryFactory
-                .update(board)
-                .set(board.member, deleteMember)
-                .where(board.member.eq(member))
-                .execute();
-
-        long commentCount = queryFactory
-                .update(comment)
-                .set(comment.member, deleteMember)
-                .where(comment.member.eq(member))
-                .execute();
-
-        return boardCount + commentCount;
-    }
-
-    @Override
-    @Transactional
-    public long deleteMyLimeByMember(Member member) {
-
-        long deleteCount = queryFactory
-                .delete(myLike)
-                .where(myLike.member.eq(member))
-                .execute();
-        return deleteCount;
-    }
 }

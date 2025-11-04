@@ -9,8 +9,4 @@ import java.util.List;
 
 public interface MemberRepositoryCustom {
     List<Member> findByExistsStatusAndDeleteAt(LocalDateTime localDateTime);
-
-    long anonymizeBoardsAndComments(Member member, Member deleteMember);
-
-    long deleteMyLimeByMember(Member member);
 }

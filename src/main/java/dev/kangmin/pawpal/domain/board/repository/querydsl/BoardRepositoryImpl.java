@@ -293,4 +293,13 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
 
         return PageableExecutionUtils.getPage(boardInfoDtoList, pageable, countQuery::fetchOne);
     }
+
+    @Override
+    public void updateBoardWriterToDeleted(Member member, Member deletedMember) {
+        queryFactory
+                .update(board)
+                .set(board.member, deletedMember)
+                .where(board.member.eq(member))
+                .execute();
+    }
 }

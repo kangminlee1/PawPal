@@ -27,4 +27,8 @@ public interface BoardRepositoryCustom {
     Page<BoardInfoDto> findByKeyword(Pageable pageable, String keyword);
 
     Page<BoardInfoDto> findByContent(Pageable pageable, String content);
+
+
+    void updateBoardWriterToDeleted(Member member, Member deletedMember);
+
 }

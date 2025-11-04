@@ -34,7 +34,27 @@ public class HealthRecordService {
 
     private final MemberService memberService;
     private final HealthRecordRepository healthRecordRepository;
+    private final HealthRecordRedisService healthRecordRedisService;
     private final DogService dogService;
+
+
+    /**
+     * 건강 검진 결과 생성
+     * @param healthInfoDto
+     * @param dog
+     * @return
+     */
+    public HealthRecord buildHealthRecord(HealthInfoDto healthInfoDto, Dog dog) {
+
+        HealthRecord healthRecord = HealthRecord.builder()
+                .dog(dog)
+                .content(healthInfoDto.getContent())
+                .height(healthInfoDto.getHeight())
+                .weight(healthInfoDto.getWeight())
+                .build();
+
+        return healthRecord;
+    }
 
     /**
      * 강아지 건강 검진 결과 등록
@@ -54,25 +74,22 @@ public class HealthRecordService {
         //7세 이상 3개월
 
         int age = myDog.getAge();
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime expiredDate;
         if (age <= 1) {
-            myDog.modifiedDate(now, now.plusMonths(1));
+            expiredDate = LocalDateTime.now().plusMonths(1);
         } else if (age <= 6) {
-            myDog.modifiedDate(now, now.plusMonths(6));
+            expiredDate = LocalDateTime.now().plusMonths(6);
         } else {
-            myDog.modifiedDate(now, now.plusMonths(3));
+            expiredDate = LocalDateTime.now().plusMonths(3);
         }
 
-        HealthRecord healthRecord = HealthRecord.builder()
-                .dog(myDog)
-                .content(healthInfoDto.getContent())
-                .height(healthInfoDto.getHeight())
-                .weight(healthInfoDto.getWeight())
-                .build();
-
-        healthRecordRepository.save(healthRecord);
+        //건강 정보 생성 후 저장
+        HealthRecord createdHealthRecord = buildHealthRecord(healthInfoDto, myDog);
+        //redis 키 저장
+        healthRecordRedisService.setHealthRecordExpiredTime(member, createdHealthRecord.getHealthRecordId(), expiredDate);
     }
     //사용자가 바로 건강 검진 탭으로 넘어가는 형식으로 결정
+
     /**
      * 나의 강아지 건강 검진 정보 찾기
      *
@@ -95,6 +112,11 @@ public class HealthRecordService {
      */
     public HealthRecord findMyDogHealthRecordByMemberAndHealthRecordId(Member member, Long healthRecordId) {
         return healthRecordRepository.findByMemberAndHealthRecordId(member, healthRecordId)
+                .orElseThrow(() -> new CustomException(BAD_REQUEST, HEALTH_INFO_IS_NOT_EXISTS));
+    }
+
+    public HealthRecord findByHealthRecordId(Long healthId) {
+        return healthRecordRepository.findByHealthRecordId(healthId)
                 .orElseThrow(() -> new CustomException(BAD_REQUEST, HEALTH_INFO_IS_NOT_EXISTS));
     }
 
@@ -129,6 +151,7 @@ public class HealthRecordService {
      * 사용자의 모든 강아지 건강 검진 목록 조회
      * 기본 최신순
      * 최신, 오래된 순 정렬
+     *
      * @param member
      * @param sortBy
      * @param page
@@ -177,6 +200,7 @@ public class HealthRecordService {
     /**
      * 강아지 몸무게 통계 -> 기본
      * 최근 6건
+     *
      * @param member
      * @param dogId
      * @return
@@ -188,6 +212,7 @@ public class HealthRecordService {
     /**
      * 강아지 몸무게 통계 -> 특정 개월 수 기준
      * 현재부터 3, 6, 12개월 전까지 탐색 가능
+     *
      * @param member
      * @param dogId
      * @param month

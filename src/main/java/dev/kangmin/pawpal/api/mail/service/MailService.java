@@ -2,10 +2,9 @@ package dev.kangmin.pawpal.api.mail.service;
 
 import dev.kangmin.pawpal.api.mail.utils.ThymeleafUtil;
 import dev.kangmin.pawpal.domain.dog.Dog;
-import dev.kangmin.pawpal.domain.dog.repository.DogRepository;
-import dev.kangmin.pawpal.domain.dog.service.DogService;
+import dev.kangmin.pawpal.domain.healthrecord.HealthRecord;
+import dev.kangmin.pawpal.domain.healthrecord.service.HealthRecordService;
 import dev.kangmin.pawpal.domain.member.Member;
-import dev.kangmin.pawpal.domain.member.repository.MemberRepository;
 import dev.kangmin.pawpal.domain.member.service.MemberService;
 import dev.kangmin.pawpal.global.error.exception.CustomException;
 import dev.kangmin.pawpal.global.error.exception.ErrorCode;
@@ -14,21 +13,15 @@ import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cglib.core.Local;
 import org.springframework.http.HttpStatus;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -42,10 +35,20 @@ public class MailService {
     //2~7세 성년 강아지 반년에 1회
     //노령견 3개월에 1회
     private final JavaMailSender mailSender;
-    private final DogRepository dogRepository;
+
     private final TemplateEngine templateEngine;
     private final ThymeleafUtil thymeleafUtil;
 
+    private final HealthRecordService healthRecordService;
+    private final MemberService memberService;
+
+    /**
+     * 메일 전송
+     * @param context
+     * @param to
+     * @param htmlPath
+     * @param subject
+     */
     public void sendMail(
             Context context, String to, String htmlPath, String subject
     ) {
@@ -67,41 +70,21 @@ public class MailService {
         }
     }
 
-    @Scheduled(cron = "0 0 0 * * *") // 매일 00:00
-    public void sendHealthCareNotification() {
+    //스케쥴로 보내기  ->  redis로
+    /**
+     * 다음 건강 검진 예정일이 다가왔을때 알림 발송
+     * @param memberId
+     * @param healthId
+     */
+    public void sendHealthCareNotification(Long memberId, Long healthId) {
         log.info("건강 검진 리마인더 메일 전송 스케줄 실행");
 
-        //대상 강아지 찾고
-        List<Dog> dogList = dogRepository.findAllByNextHealthCheckDateBefore(LocalDateTime.now());
+        Member member = memberService.findMemberByMemberId(memberId);
+        HealthRecord healthRecord = healthRecordService.findByHealthRecordId(healthId);
 
-        LocalDateTime now = LocalDateTime.now();
-        for (Dog dog : dogList) {
-            LocalDateTime nextDate;
-            if (dog.getAge() <= 1) {
-                nextDate = now.plusMonths(1);
-            } else if (dog.getAge() <= 6) {
-                nextDate = now.plusMonths(6);
-            }else{
-                nextDate = now.plusMonths(3);
-            }
-            dog.modifiedDate(dog.getLastHealthCheckDate(), nextDate);
-        }
+        Context context = thymeleafUtil.initHealthNotification(member.getName(), healthRecord.getDog().getName());
+        String subject = (String) context.getVariable("subject");
 
-        dogList.parallelStream().forEach(dog -> {
-            Member member = dog.getMember();
-
-            Context context = thymeleafUtil.initHealthNotification(member.getName(), dog.getName());
-            String subject = (String) context.getVariable("subject");
-
-            sendMailAsync(context, member.getEmail(), "mail/check", subject);
-        });
-
+        sendMail(context, member.getEmail(), "mail/check", subject);
     }
-
-    @Async
-    public void sendMailAsync(Context context, String to, String htmlPath, String subject) {
-        sendMail(context, to, htmlPath, subject);
-
-    }
-
 }
