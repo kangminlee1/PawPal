@@ -13,7 +13,6 @@ import lombok.NoArgsConstructor;
 public class DogDetailDto {
 
     private Long dogId;
-    private String breed;
     private String name;
     private boolean isNeutralizing;
     private int age;
@@ -23,7 +22,6 @@ public class DogDetailDto {
         return DogDetailDto.builder()
                 .dogId(dog.getDogId())
                 .age(dog.getAge())
-                .breed(dog.getBreed())
                 .name(dog.getName())
                 .isNeutralizing(dog.isNeutralizing())
                 .image(dog.getImage())

@@ -15,8 +15,6 @@ public class UpdateDogDto {
     @NotBlank
     private Long dogId;
     @NotBlank
-    private String breed;
-    @NotBlank
     private String name;
     @NotBlank
     private boolean isNeutralizing;

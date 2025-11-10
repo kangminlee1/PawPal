@@ -32,4 +32,12 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom{
                 )
                 .fetch();
     }
+
+    @Override
+    public void deleteMyLikeByMember(Member nowMember) {
+        queryFactory
+                .delete(member)
+                .where(member.eq(nowMember))
+                .execute();
+    }
 }

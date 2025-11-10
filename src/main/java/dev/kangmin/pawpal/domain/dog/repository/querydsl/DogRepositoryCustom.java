@@ -29,6 +29,6 @@ public interface DogRepositoryCustom {
 
     Optional<Dog> findByMemberMemberIdAndDogId(Long memberId, Long dogId);
 
-    List<Dog> findAllByNextHealthCheckDateBefore(LocalDateTime localDateTime);
+//    List<Dog> findAllByNextHealthCheckDateBefore(LocalDateTime localDateTime);
 }
 

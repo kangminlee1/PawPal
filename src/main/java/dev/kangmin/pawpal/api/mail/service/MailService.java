@@ -1,7 +1,6 @@
 package dev.kangmin.pawpal.api.mail.service;
 
 import dev.kangmin.pawpal.api.mail.utils.ThymeleafUtil;
-import dev.kangmin.pawpal.domain.dog.Dog;
 import dev.kangmin.pawpal.domain.healthrecord.HealthRecord;
 import dev.kangmin.pawpal.domain.healthrecord.service.HealthRecordService;
 import dev.kangmin.pawpal.domain.member.Member;
@@ -16,12 +15,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
-
-import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor

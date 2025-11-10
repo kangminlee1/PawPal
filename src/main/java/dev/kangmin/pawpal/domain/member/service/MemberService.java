@@ -33,7 +33,6 @@ import static org.springframework.http.HttpStatus.*;
 public class MemberService {
 
     private final MemberRepository memberRepository;
-    private final MemberRedisService memberRedisService;
     private final BCryptPasswordEncoder passwordEncoder;
 
     private final BoardRepository boardRepository;
@@ -83,42 +82,7 @@ public class MemberService {
                 .orElseThrow(() -> new CustomException(BAD_REQUEST, MEMBER_IS_NOT_EXISTS));
     }
 
-    /**
-     * 사용자 정보 수정
-     * @param modifyMemberDto
-     * @param email
-     */
-    @Transactional
-    public void modifiedMember(ModifyMemberDto modifyMemberDto, String email) {
 
-        //사용자 본인 검증
-        //임시로 이메일 받아서 그걸로 멤버 찾은 후 하는 방향
-        Member member = findMemberByEmail(email);
-
-        //비밀번호 암호화 후 저장
-        member.modifyMember(member.getName(), modifyMemberDto.getEmail(), passwordEncoder.encode(modifyMemberDto.getPassword()));
-    }
-
-    /**
-     * 회원 상태 변경
-     * 탈퇴 상태 -> 존재 상태 : redis에 삭제하기 위한 key 삭제
-     * 존재 상태 -> 탈퇴 상태 : redis에 삭제하기 위한 key 생성
-     * @param member
-     */
-    @Transactional
-    public void changeMember(Member member) {
-
-        if (member.getExistStatus() == ExistStatus.EXISTS) {
-            LocalDateTime currentTime = LocalDateTime.now();
-            member.changeStatus(ExistStatus.DELETED, currentTime);
-            memberRedisService.setMemberExpireTime(member, currentTime);
-        }else{
-            //삭제 상태를 취소할 경우 null로 처리해야 1달이 지났을 때 삭제 되지 않음
-            member.changeStatus(ExistStatus.EXISTS, null);
-            memberRedisService.deleteMemberFromRedis(member);
-        }
-
-    }
 
     // 근데 사용자를 완전히 삭제 했을 때  문제점
     //1. 게시글, 댓글은 남긴다는 가정하에 다시 가입했을때 정보 꼬임

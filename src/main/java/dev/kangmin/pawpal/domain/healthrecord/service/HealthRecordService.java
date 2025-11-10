@@ -32,64 +32,11 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 @RequiredArgsConstructor
 public class HealthRecordService {
 
-    private final MemberService memberService;
     private final HealthRecordRepository healthRecordRepository;
-    private final HealthRecordRedisService healthRecordRedisService;
-    private final DogService dogService;
 
 
-    /**
-     * 건강 검진 결과 생성
-     * @param healthInfoDto
-     * @param dog
-     * @return
-     */
-    public HealthRecord buildHealthRecord(HealthInfoDto healthInfoDto, Dog dog) {
 
-        HealthRecord healthRecord = HealthRecord.builder()
-                .dog(dog)
-                .content(healthInfoDto.getContent())
-                .height(healthInfoDto.getHeight())
-                .weight(healthInfoDto.getWeight())
-                .build();
-
-        return healthRecord;
-    }
-
-    /**
-     * 강아지 건강 검진 결과 등록
-     *
-     * @param member
-     * @param healthInfoDto
-     */
-    @Transactional
-    public void generateMyDogHealthRecord(Member member, HealthInfoDto healthInfoDto) {
-
-        //사용자의 강아지가 맞는 지 확인
-        Dog myDog = dogService.findDogByMemberIdAndDogId(member.getMemberId(), healthInfoDto.getDogId());
-
-        //여기에 강아지 나이대 별로 저장
-        //1세 이하 1달 기준
-        //2~6세 반년
-        //7세 이상 3개월
-
-        int age = myDog.getAge();
-        LocalDateTime expiredDate;
-        if (age <= 1) {
-            expiredDate = LocalDateTime.now().plusMonths(1);
-        } else if (age <= 6) {
-            expiredDate = LocalDateTime.now().plusMonths(6);
-        } else {
-            expiredDate = LocalDateTime.now().plusMonths(3);
-        }
-
-        //건강 정보 생성 후 저장
-        HealthRecord createdHealthRecord = buildHealthRecord(healthInfoDto, myDog);
-        //redis 키 저장
-        healthRecordRedisService.setHealthRecordExpiredTime(member, createdHealthRecord.getHealthRecordId(), expiredDate);
-    }
     //사용자가 바로 건강 검진 탭으로 넘어가는 형식으로 결정
-
     /**
      * 나의 강아지 건강 검진 정보 찾기
      *
@@ -115,6 +62,11 @@ public class HealthRecordService {
                 .orElseThrow(() -> new CustomException(BAD_REQUEST, HEALTH_INFO_IS_NOT_EXISTS));
     }
 
+    /**
+     * id값으로 강아지의 건강 검진 기록 찾기
+     * @param healthId
+     * @return
+     */
     public HealthRecord findByHealthRecordId(Long healthId) {
         return healthRecordRepository.findByHealthRecordId(healthId)
                 .orElseThrow(() -> new CustomException(BAD_REQUEST, HEALTH_INFO_IS_NOT_EXISTS));
@@ -183,6 +135,7 @@ public class HealthRecordService {
 //                .toList();
     }
 
+    //강아지 세부 기록 볼때 비만 등 상태  +  현재 강아지가 평균에 비해 %로 얼마만큼 차이가 나는가
     /**
      * 나의 강아지 건강 검진 세부 기록
      *
@@ -190,13 +143,19 @@ public class HealthRecordService {
      * @param healthRecordId
      * @return
      */
-    public HealthDetailDto getMyDotHealthDetailRecord(Member member, Long healthRecordId) {
-        //querydsl로 N+1 해결(fetchJoin
-        return HealthDetailDto.of(findMyDogHealthRecordByMemberAndHealthRecordId(member, healthRecordId));
-    }
+//    public HealthDetailDto getMyDotHealthDetailRecord(Member member, Long healthRecordId) {
+//        HealthDetailDto healthDetailDto = HealthDetailDto.of(findMyDogHealthRecordByMemberAndHealthRecordId(member, healthRecordId));
+//        healthDetailDto.setWeightState(healthDetailDto.getWeight(), healthDetailDto.getDog);
+////        return HealthDetailDto.of(findMyDogHealthRecordByMemberAndHealthRecordId(member, healthRecordId));
+//    }
+//
+//    public String calcWeightState(double weight, ) {
+//
+//    }
 
-    //강아지 건강 검진 통계
-
+    //강아지 건강 검진 통계 -> 건강검진 통계 값은 가장 마지막 데이터 가장 첫번째 데이터랑 비교해서 얼마만큼 찌고 빠졌는지 %로 데이터 추가
+    //기본적으로는 강아지 세부 정보 페이지에서 주는 정보
+    //특정 조건을 변경했을 때 호출할 통계 자료들
     /**
      * 강아지 몸무게 통계 -> 기본
      * 최근 6건
@@ -218,8 +177,14 @@ public class HealthRecordService {
      * @param month
      * @return
      */
+
+    //강아지 몸무게 변화 추세 % 단위
+    //정상 몸무게 기준 저체중, 평균, 과체중, 비만  -> 추가
     public List<DogWeightDto> getDogWeightChangeStatisticsByLastMonth(Member member, Long dogId, int month) {
         return healthRecordRepository.findWeightChangeStaticsByMemberIdAndDogIdAndMonth(member.getMemberId(), dogId, month);
     }
+
+
+
 
 }

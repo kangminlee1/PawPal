@@ -20,7 +20,6 @@ import java.util.concurrent.TimeUnit;
 public class HealthRecordRedisService {
 
     private final StringRedisTemplate redisTemplate;
-    private final HealthRecordRepository healthRecordRepository;
 
     private static final String HEALTH_EXPIRATION_KEY_PREFIX = "health:end:";
 

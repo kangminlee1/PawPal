@@ -9,4 +9,6 @@ import java.util.List;
 
 public interface MemberRepositoryCustom {
     List<Member> findByExistsStatusAndDeleteAt(LocalDateTime localDateTime);
+
+    void deleteMyLikeByMember(Member member);
 }

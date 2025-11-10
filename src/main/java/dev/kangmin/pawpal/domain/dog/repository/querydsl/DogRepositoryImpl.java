@@ -35,7 +35,6 @@ public class DogRepositoryImpl implements DogRepositoryCustom {
                 .select(Projections.constructor(DogInquiryDto.class,
                         dog.dogId,
                         dog.name,
-                        dog.breed,
                         dog.age)
                 )
                 .from(dog)
@@ -66,7 +65,6 @@ public class DogRepositoryImpl implements DogRepositoryCustom {
                 .select(Projections.constructor(DogInquiryDto.class,
                         dog.dogId,
                         dog.name,
-                        dog.breed,
                         dog.age)
                 )
                 .from(dog)
@@ -95,13 +93,11 @@ public class DogRepositoryImpl implements DogRepositoryCustom {
                 .select(Projections.constructor(DogInquiryDto.class,
                         dog.dogId,
                         dog.name,
-                        dog.breed,
                         dog.age)
                 )
                 .from(dog)
                 .where(
-                        dog.member.eq(member),
-                        dog.breed.eq(breed)
+                        dog.member.eq(member)
                 )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -111,8 +107,7 @@ public class DogRepositoryImpl implements DogRepositoryCustom {
                 .select(dog.count())
                 .from(dog)
                 .where(
-                        dog.member.eq(member),
-                        dog.breed.eq(breed)
+                        dog.member.eq(member)
                 );
 
         return PageableExecutionUtils.getPage(dogInquiryDtoList, pageable, countQuery::fetchOne);
@@ -176,19 +171,4 @@ public class DogRepositoryImpl implements DogRepositoryCustom {
                         .fetchOne()
         );
     }
-
-    @Override
-    public List<Dog> findAllByNextHealthCheckDateBefore(LocalDateTime now) {
-        return queryFactory
-                .select(dog)
-                .from(dog)
-                .leftJoin(dog.member, member).fetchJoin()
-                .where(
-                        dog.age.loe(1).and(dog.nextHealthCheckDate.loe(now))
-                                .or(dog.age.between(2, 6).and(dog.nextHealthCheckDate.loe(now)))
-                                .or(dog.age.goe(7).and(dog.nextHealthCheckDate.loe(now)))
-                )
-                .fetch();
-    }
-
 }

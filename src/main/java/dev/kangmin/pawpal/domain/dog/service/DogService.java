@@ -3,17 +3,13 @@ package dev.kangmin.pawpal.domain.dog.service;
 import dev.kangmin.pawpal.domain.dog.Dog;
 import dev.kangmin.pawpal.domain.dog.dto.*;
 import dev.kangmin.pawpal.domain.dog.repository.DogRepository;
-import dev.kangmin.pawpal.domain.enums.ExistStatus;
 import dev.kangmin.pawpal.domain.healthrecord.repository.HealthRecordRepository;
 import dev.kangmin.pawpal.domain.member.Member;
-import dev.kangmin.pawpal.domain.member.service.MemberService;
 import dev.kangmin.pawpal.global.error.exception.CustomException;
-import dev.kangmin.pawpal.global.error.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,7 +49,6 @@ public class DogService {
         //사용자 찾아서
         Dog dog = Dog.builder()
                 .name(dogInfoDto.getName())
-                .breed(dogInfoDto.getBreed())
                 .isNeutralizing(dogInfoDto.isNeutralizing())
                 .age(dogInfoDto.getAge())
                 .image(dogInfoDto.getImage())
@@ -86,7 +81,7 @@ public class DogService {
 
     /**
      * 강아지 정보 삭제
-     *
+     * 강아지 정보 삭제시 바로 삭제하는 걸로 변경
      * @param member
      * @param updateDogDto
      */
