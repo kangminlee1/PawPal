@@ -1,9 +1,6 @@
 package dev.kangmin.pawpal.domain.dog.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -11,8 +8,10 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Setter
 public class DogWeightDto {
 
     private LocalDateTime createDate;
     private double weight;
+    private Double weightDeviationPercent;
 }

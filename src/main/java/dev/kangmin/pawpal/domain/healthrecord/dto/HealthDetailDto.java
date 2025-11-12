@@ -22,6 +22,7 @@ public class HealthDetailDto {
     private LocalDateTime createDate;
     //강아지 과체중,평균, 비만 등 상태
     private String weightState;
+    private Double weightDeviationPercent;
 
     public static HealthDetailDto of(HealthRecord healthRecord) {
         return HealthDetailDto.builder()
@@ -32,6 +33,7 @@ public class HealthDetailDto {
                 .height(healthRecord.getHeight())
                 .memberName(healthRecord.getDog().getMember().getName())
                 .createDate(healthRecord.getCreateDate())
+                .weightState(healthRecord.getWeightState())
                 .build();
     }
 

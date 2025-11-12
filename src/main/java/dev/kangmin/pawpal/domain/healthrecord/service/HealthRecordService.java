@@ -1,5 +1,7 @@
 package dev.kangmin.pawpal.domain.healthrecord.service;
 
+import dev.kangmin.pawpal.domain.DogBreed.DogBreed;
+import dev.kangmin.pawpal.domain.DogBreed.service.DogBreedService;
 import dev.kangmin.pawpal.domain.dog.Dog;
 import dev.kangmin.pawpal.domain.dog.dto.DogWeightDto;
 import dev.kangmin.pawpal.domain.dog.service.DogService;
@@ -33,8 +35,7 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 public class HealthRecordService {
 
     private final HealthRecordRepository healthRecordRepository;
-
-
+    private final DogService dogService;
 
     //사용자가 바로 건강 검진 탭으로 넘어가는 형식으로 결정
     /**
@@ -143,15 +144,17 @@ public class HealthRecordService {
      * @param healthRecordId
      * @return
      */
-//    public HealthDetailDto getMyDotHealthDetailRecord(Member member, Long healthRecordId) {
-//        HealthDetailDto healthDetailDto = HealthDetailDto.of(findMyDogHealthRecordByMemberAndHealthRecordId(member, healthRecordId));
-//        healthDetailDto.setWeightState(healthDetailDto.getWeight(), healthDetailDto.getDog);
-////        return HealthDetailDto.of(findMyDogHealthRecordByMemberAndHealthRecordId(member, healthRecordId));
-//    }
-//
-//    public String calcWeightState(double weight, ) {
-//
-//    }
+    public HealthDetailDto getMyDotHealthDetailRecord(Member member, Long healthRecordId) {
+        HealthRecord healthRecord = findMyDogHealthRecordByMemberAndHealthRecordId(member, healthRecordId);
+        DogBreed dogBreed = healthRecord.getDog().getDogBreed();
+
+        HealthDetailDto healthDetailDto = HealthDetailDto.of(healthRecord);
+        healthDetailDto.setWeightDeviationPercent(
+                calcWeight(healthDetailDto.getWeight(), dogBreed.getMinWeight(), dogBreed.getMaxWeight())
+        );
+
+        return healthDetailDto;
+    }
 
     //강아지 건강 검진 통계 -> 건강검진 통계 값은 가장 마지막 데이터 가장 첫번째 데이터랑 비교해서 얼마만큼 찌고 빠졌는지 %로 데이터 추가
     //기본적으로는 강아지 세부 정보 페이지에서 주는 정보
@@ -165,7 +168,19 @@ public class HealthRecordService {
      * @return
      */
     public List<DogWeightDto> getDogWeightChangeStatistics(Member member, Long dogId) {
-        return healthRecordRepository.findWeightChangeStaticsByMemberIdAndDogId(member.getMemberId(), dogId);
+        List<DogWeightDto> dogWeightDtoList = healthRecordRepository.findWeightChangeStaticsByMemberIdAndDogId(member.getMemberId(), dogId);
+
+        Dog dog = dogService.findDogByDogId(dogId);
+
+        double minWeight = dog.getDogBreed().getMinWeight();
+        double maxWeight = dog.getDogBreed().getMaxWeight();
+
+        for (DogWeightDto dogWeightDto : dogWeightDtoList) {
+            dogWeightDto.setWeightDeviationPercent(
+                    calcWeight(dogWeightDto.getWeight(), minWeight, maxWeight)
+            );
+        }
+        return dogWeightDtoList;
     }
 
     /**
@@ -177,14 +192,34 @@ public class HealthRecordService {
      * @param month
      * @return
      */
-
-    //강아지 몸무게 변화 추세 % 단위
-    //정상 몸무게 기준 저체중, 평균, 과체중, 비만  -> 추가
+    //강아지 몸무게 변화 추세 % 단위 추가?
     public List<DogWeightDto> getDogWeightChangeStatisticsByLastMonth(Member member, Long dogId, int month) {
-        return healthRecordRepository.findWeightChangeStaticsByMemberIdAndDogIdAndMonth(member.getMemberId(), dogId, month);
+        List<DogWeightDto> dogWeightDtoList = healthRecordRepository.findWeightChangeStaticsByMemberIdAndDogIdAndMonth(member.getMemberId(), dogId, month);
+
+        Dog dog = dogService.findDogByDogId(dogId);
+
+        double minWeight = dog.getDogBreed().getMinWeight();
+        double maxWeight = dog.getDogBreed().getMaxWeight();
+
+        for (DogWeightDto dogWeightDto : dogWeightDtoList) {
+            dogWeightDto.setWeightDeviationPercent(
+                    calcWeight(dogWeightDto.getWeight(), minWeight, maxWeight)
+            );
+        }
+
+        return dogWeightDtoList;
     }
 
-
-
-
+    //현재 몸무게 상태 % 계산
+    public Double calcWeight(double dogWeight, double minWeight, double maxWeight) {
+        if (dogWeight < minWeight) {
+            return (dogWeight - minWeight) / minWeight * 100;
+        } else if (dogWeight <= maxWeight) {
+            return 0.0;
+        } else if (dogWeight <= maxWeight * 1.2) {
+            return (dogWeight - maxWeight) / maxWeight * 100;
+        } else {
+            return (dogWeight - maxWeight) / maxWeight * 100;
+        }
+    }
 }

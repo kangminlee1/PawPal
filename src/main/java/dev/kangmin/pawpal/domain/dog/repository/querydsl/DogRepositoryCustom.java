@@ -1,6 +1,7 @@
 package dev.kangmin.pawpal.domain.dog.repository.querydsl;
 
 import dev.kangmin.pawpal.domain.dog.Dog;
+import dev.kangmin.pawpal.domain.dog.dto.DogDetailDto;
 import dev.kangmin.pawpal.domain.dog.dto.DogInquiryDto;
 import dev.kangmin.pawpal.domain.dog.dto.DogNameIdDto;
 import dev.kangmin.pawpal.domain.member.Member;
@@ -19,7 +20,7 @@ public interface DogRepositoryCustom {
 
     Page<DogInquiryDto> findDogListByMember(Member member, Pageable pageable);
 
-    Page<DogInquiryDto> findByMemberAndBreed(Member member, String breed, Pageable pageable);
+    Page<DogInquiryDto> findByMemberAndDogBreedId(Member member, Long dogBreedId, Pageable pageable);
 
     List<DogNameIdDto> findDogNameIdListByMember(Member member);
 
@@ -28,6 +29,8 @@ public interface DogRepositoryCustom {
     Optional<Dog> findByDogId(Long dogId);
 
     Optional<Dog> findByMemberMemberIdAndDogId(Long memberId, Long dogId);
+
+    DogDetailDto findDogDetailDtoByMemberAndDogId(Member member, Long dogId);
 
 //    List<Dog> findAllByNextHealthCheckDateBefore(LocalDateTime localDateTime);
 }

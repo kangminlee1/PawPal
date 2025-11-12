@@ -46,7 +46,10 @@ public enum ErrorCode {
     //좋아요
 
     //메일
-    SEND_MAIL_ERROR("메일 발송 중 오류 발생.");
+    SEND_MAIL_ERROR("메일 발송 중 오류 발생."),
+
+    //견종 관련
+    DOG_BREED_IS_NOT_EXISTS("해당 견종은 존재하지 않습니다.");
 
     private final String errorMessage;
     ErrorCode(String errorMessage){

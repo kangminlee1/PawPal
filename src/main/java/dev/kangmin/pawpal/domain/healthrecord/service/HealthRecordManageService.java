@@ -1,5 +1,6 @@
 package dev.kangmin.pawpal.domain.healthrecord.service;
 
+import dev.kangmin.pawpal.domain.DogBreed.DogBreed;
 import dev.kangmin.pawpal.domain.dog.Dog;
 import dev.kangmin.pawpal.domain.dog.service.DogService;
 import dev.kangmin.pawpal.domain.healthrecord.HealthRecord;
@@ -28,14 +29,29 @@ public class HealthRecordManageService {
      */
     public HealthRecord buildHealthRecord(HealthInfoDto healthInfoDto, Dog dog) {
 
-        HealthRecord healthRecord = HealthRecord.builder()
+        String weightState;
+
+        double minWeight = dog.getDogBreed().getMinWeight();
+        double maxWeight = dog.getDogBreed().getMaxWeight();
+
+        double dogWeight = healthInfoDto.getWeight();
+        if (dogWeight < minWeight) {
+            weightState = "저체중";
+        } else if (dogWeight <= maxWeight) {
+            weightState = "정상 체중";
+        } else if (dogWeight <= maxWeight * 1.2) {
+            weightState = "과체중";
+        } else {
+            weightState = "비만";
+        }
+
+        return HealthRecord.builder()
                 .dog(dog)
                 .content(healthInfoDto.getContent())
                 .height(healthInfoDto.getHeight())
                 .weight(healthInfoDto.getWeight())
+                .weightState(weightState)
                 .build();
-
-        return healthRecord;
     }
 
     /**

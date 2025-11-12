@@ -1,12 +1,19 @@
 package dev.kangmin.pawpal.domain.DogBreed.service;
 
+import dev.kangmin.pawpal.domain.DogBreed.DogBreed;
 import dev.kangmin.pawpal.domain.DogBreed.dto.DogBreedInfoDto;
 import dev.kangmin.pawpal.domain.DogBreed.repository.DogBreedRepository;
+import dev.kangmin.pawpal.global.error.exception.CustomException;
+import dev.kangmin.pawpal.global.error.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
+import static dev.kangmin.pawpal.global.error.exception.ErrorCode.*;
+import static org.springframework.http.HttpStatus.*;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +30,11 @@ public class DogBreedService {
      */
     public List<DogBreedInfoDto> getDogBreedInfoList() {
         return dogBreedRepository.findDogBreedInfo();
+    }
+
+    public DogBreed findByDogBreedId(Long dogBreedId) {
+        return dogBreedRepository.findByDogBreedId(dogBreedId)
+                .orElseThrow(() -> new CustomException(BAD_REQUEST, DOG_BREED_IS_NOT_EXISTS));
     }
 
 }

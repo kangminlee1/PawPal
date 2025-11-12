@@ -67,4 +67,12 @@ public class Dog {
         this.image = dogInfoDto.getImage();
     }
 
+    public void modifyInfo(UpdateDogDto dogInfoDto, DogBreed dogBreed) {
+        this.name = dogInfoDto.getName();
+        this.isNeutralizing = dogInfoDto.isNeutralizing();
+        this.dogBreed = dogBreed;
+        this.age = dogInfoDto.getAge();
+        this.image = dogInfoDto.getImage();
+    }
+
 }

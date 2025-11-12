@@ -1,5 +1,7 @@
 package dev.kangmin.pawpal.domain.dog.service;
 
+import dev.kangmin.pawpal.domain.DogBreed.DogBreed;
+import dev.kangmin.pawpal.domain.DogBreed.service.DogBreedService;
 import dev.kangmin.pawpal.domain.dog.Dog;
 import dev.kangmin.pawpal.domain.dog.dto.*;
 import dev.kangmin.pawpal.domain.dog.repository.DogRepository;
@@ -24,6 +26,7 @@ public class DogService {
 
     private final DogRepository dogRepository;
     private final HealthRecordRepository healthRecordRepository;
+    private final DogBreedService dogBreedService;
 
     //강아지 이름, ID 값은 메인 페이지 첫 진입 시 내려주고,
     //강아지 정보 수정 시 다시 프론트가 해당 API를 재호출해서 다시 받는 구조라는 설정
@@ -46,15 +49,16 @@ public class DogService {
      */
     @Transactional
     public List<DogNameIdDto> generateDogInfo(Member member, DogInfoDto dogInfoDto) {
+        DogBreed dogBreed = dogBreedService.findByDogBreedId(dogInfoDto.getDogBreedId());
         //사용자 찾아서
         Dog dog = Dog.builder()
                 .name(dogInfoDto.getName())
                 .isNeutralizing(dogInfoDto.isNeutralizing())
                 .age(dogInfoDto.getAge())
+                .dogBreed(dogBreed)
                 .image(dogInfoDto.getImage())
                 .member(member)
                 .build();
-
         //강아지 정보 저장
         dogRepository.save(dog);
 
@@ -71,11 +75,17 @@ public class DogService {
         //로그인된 사람과 해당 강아지 정보의 주인이 맞는지
         Dog findDog = findDogByDogId(updateDogDto.getDogId());
 
+        if (!(findDog.getDogBreed().getDogBreedId().equals(updateDogDto.getDogBreedId()))) {
+            DogBreed dogBreed = dogBreedService.findByDogBreedId(updateDogDto.getDogBreedId());
+            findDog.modifyInfo(updateDogDto, dogBreed);
+        } else {
+            findDog.modifyInfo(updateDogDto);
+        }
+
         if(!findDog.getMember().getMemberId().equals(member.getMemberId())){
             throw new CustomException(FORBIDDEN, DOG_OWNER_MISMATCH);
         }
 
-        findDog.modifyInfo(updateDogDto);
         return getDogNameAndDogIdList(member);
     }
 
@@ -143,13 +153,13 @@ public class DogService {
      * 내 강아지의 견종 별 조회
      *
      * @param member
-     * @param breed
+     * @param dogBreedId
      * @return
      */
-    public Page<DogInquiryDto> getFilteredMyDogInfoByBreed(Member member, String breed, int page, int size) {
+    public Page<DogInquiryDto> getFilteredMyDogInfoByBreed(Member member, Long dogBreedId, int page, int size) {
         //원하는 견종의 DTO 리스트 반환
         Pageable pageable = PageRequest.of(page, size);
-        return dogRepository.findByMemberAndBreed(member, breed, pageable);
+        return dogRepository.findByMemberAndDogBreedId(member, dogBreedId, pageable);
     }
 
     /**
@@ -173,7 +183,7 @@ public class DogService {
      */
     public DogDetailDto getMyDogDetailInfo(Member member, Long dogId) {
         //강아지 세부 정보 조회
-        return DogDetailDto.of(findDogByMemberIdAndDogId(member.getMemberId(), dogId));
+        return dogRepository.findDogDetailDtoByMemberAndDogId(member, dogId);
     }
 
     /**

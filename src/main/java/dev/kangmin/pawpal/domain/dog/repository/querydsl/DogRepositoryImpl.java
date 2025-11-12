@@ -6,6 +6,7 @@ import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import dev.kangmin.pawpal.domain.dog.Dog;
 import dev.kangmin.pawpal.domain.dog.QDog;
+import dev.kangmin.pawpal.domain.dog.dto.DogDetailDto;
 import dev.kangmin.pawpal.domain.dog.dto.DogInquiryDto;
 import dev.kangmin.pawpal.domain.dog.dto.DogNameIdDto;
 import dev.kangmin.pawpal.domain.member.Member;
@@ -14,6 +15,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
+import static dev.kangmin.pawpal.domain.DogBreed.QDogBreed.dogBreed;
+
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -88,16 +91,19 @@ public class DogRepositoryImpl implements DogRepositoryCustom {
 
     //사용자의 강아지 조회 with 견종
     @Override
-    public Page<DogInquiryDto> findByMemberAndBreed(Member member, String breed, Pageable pageable) {
+    public Page<DogInquiryDto> findByMemberAndDogBreedId(Member member, Long dogBreedId, Pageable pageable) {
         List<DogInquiryDto> dogInquiryDtoList = queryFactory
-                .select(Projections.constructor(DogInquiryDto.class,
+                .select(Projections.constructor(
+                        DogInquiryDto.class,
                         dog.dogId,
                         dog.name,
                         dog.age)
                 )
                 .from(dog)
+                .join(dog.dogBreed, dogBreed)
                 .where(
-                        dog.member.eq(member)
+                        dog.member.eq(member),
+                        dog.dogBreed.dogBreedId.eq(dogBreedId)
                 )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -107,7 +113,9 @@ public class DogRepositoryImpl implements DogRepositoryCustom {
                 .select(dog.count())
                 .from(dog)
                 .where(
-                        dog.member.eq(member)
+                        dog.member.eq(member),
+                        dog.dogBreed.dogBreedId.eq(dogBreedId)
+
                 );
 
         return PageableExecutionUtils.getPage(dogInquiryDtoList, pageable, countQuery::fetchOne);
@@ -170,5 +178,28 @@ public class DogRepositoryImpl implements DogRepositoryCustom {
                         )
                         .fetchOne()
         );
+    }
+
+    @Override
+    public DogDetailDto findDogDetailDtoByMemberAndDogId(Member myMember, Long dogId) {
+        return queryFactory
+                .select(
+                        Projections.constructor(
+                                DogDetailDto.class,
+                                dog.dogId,
+                                dog.name,
+                                dog.isNeutralizing,
+                                dog.dogBreed.breed,
+                                dog.age,
+                                dog.image
+                        )
+                )
+                .from(dog)
+                .join(dog.dogBreed, dogBreed)
+                .where(
+                        dog.member.eq(myMember),
+                        dog.dogId.eq(dogId)
+                )
+                .fetchOne();
     }
 }

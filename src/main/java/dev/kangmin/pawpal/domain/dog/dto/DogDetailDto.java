@@ -15,6 +15,7 @@ public class DogDetailDto {
     private Long dogId;
     private String name;
     private boolean isNeutralizing;
+    private String breed;
     private int age;
     private String image;
 
@@ -23,6 +24,7 @@ public class DogDetailDto {
                 .dogId(dog.getDogId())
                 .age(dog.getAge())
                 .name(dog.getName())
+                .breed(dog.getDogBreed().getBreed())
                 .isNeutralizing(dog.isNeutralizing())
                 .image(dog.getImage())
                 .build();

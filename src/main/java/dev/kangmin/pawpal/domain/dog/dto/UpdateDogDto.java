@@ -19,6 +19,8 @@ public class UpdateDogDto {
     @NotBlank
     private boolean isNeutralizing;
     @NotBlank
+    private Long dogBreedId;
+    @NotBlank
     private int age;
     @NotBlank
     private String image;

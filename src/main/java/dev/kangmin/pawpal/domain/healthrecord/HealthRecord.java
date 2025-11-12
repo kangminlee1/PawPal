@@ -33,6 +33,8 @@ public class HealthRecord {
     @LastModifiedDate
     private LocalDateTime updateDate;
 
+    private String weightState;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dogId")
     private Dog dog;
