@@ -4,7 +4,6 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import dev.kangmin.pawpal.domain.dog.Dog;
-import dev.kangmin.pawpal.domain.dog.QDog;
 import dev.kangmin.pawpal.domain.dog.dto.DogDetailDto;
 import dev.kangmin.pawpal.domain.dog.dto.DogInquiryDto;
 import dev.kangmin.pawpal.domain.dog.dto.DogNameIdDto;

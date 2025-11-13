@@ -7,6 +7,7 @@ import dev.kangmin.pawpal.domain.foodrecord.FoodRecord;
 import dev.kangmin.pawpal.domain.healthrecord.HealthRecord;
 import dev.kangmin.pawpal.domain.member.Member;
 import dev.kangmin.pawpal.domain.vaccinationrecord.VaccinationRecord;
+import dev.kangmin.pawpal.domain.walk.Walk;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -59,6 +60,9 @@ public class Dog {
 
     @OneToMany(mappedBy = "dog",cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FoodRecord> foodRecordList;
+
+    @OneToMany(mappedBy = "dog", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Walk> walkList;
 
     public void modifyInfo(UpdateDogDto dogInfoDto) {
         this.name = dogInfoDto.getName();
