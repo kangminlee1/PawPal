@@ -1,7 +1,6 @@
 package dev.kangmin.pawpal.domain.healthrecord.service;
 
-import dev.kangmin.pawpal.domain.DogBreed.DogBreed;
-import dev.kangmin.pawpal.domain.DogBreed.service.DogBreedService;
+import dev.kangmin.pawpal.domain.dogbreed.DogBreed;
 import dev.kangmin.pawpal.domain.dog.Dog;
 import dev.kangmin.pawpal.domain.dog.dto.DogWeightDto;
 import dev.kangmin.pawpal.domain.dog.service.DogService;
@@ -11,19 +10,15 @@ import dev.kangmin.pawpal.domain.healthrecord.dto.HealthInfoDto;
 import dev.kangmin.pawpal.domain.healthrecord.dto.HealthInquiryDto;
 import dev.kangmin.pawpal.domain.healthrecord.repository.HealthRecordRepository;
 import dev.kangmin.pawpal.domain.member.Member;
-import dev.kangmin.pawpal.domain.member.service.MemberService;
 import dev.kangmin.pawpal.global.error.exception.CustomException;
-import dev.kangmin.pawpal.global.error.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static dev.kangmin.pawpal.global.error.exception.ErrorCode.*;

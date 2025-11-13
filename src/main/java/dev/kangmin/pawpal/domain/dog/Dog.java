@@ -1,6 +1,6 @@
 package dev.kangmin.pawpal.domain.dog;
 
-import dev.kangmin.pawpal.domain.DogBreed.DogBreed;
+import dev.kangmin.pawpal.domain.dogbreed.DogBreed;
 import dev.kangmin.pawpal.domain.dog.dto.UpdateDogDto;
 import dev.kangmin.pawpal.domain.enums.ExistStatus;
 import dev.kangmin.pawpal.domain.foodrecord.FoodRecord;

@@ -1,4 +1,4 @@
-package dev.kangmin.pawpal.domain.DogBreed;
+package dev.kangmin.pawpal.domain.dogbreed;
 
 import dev.kangmin.pawpal.domain.dog.Dog;
 import jakarta.persistence.*;

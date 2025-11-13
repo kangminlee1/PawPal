@@ -1,7 +1,6 @@
 package dev.kangmin.pawpal.domain.dog.repository.querydsl;
 
 import com.querydsl.core.types.Projections;
-import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import dev.kangmin.pawpal.domain.dog.Dog;
@@ -15,10 +14,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
-import static dev.kangmin.pawpal.domain.DogBreed.QDogBreed.dogBreed;
+import static dev.kangmin.pawpal.domain.dogbreed.QDogBreed.dogBreed;
 
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 

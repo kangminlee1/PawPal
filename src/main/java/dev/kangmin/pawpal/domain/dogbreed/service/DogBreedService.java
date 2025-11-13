@@ -1,13 +1,11 @@
-package dev.kangmin.pawpal.domain.DogBreed.service;
+package dev.kangmin.pawpal.domain.dogbreed.service;
 
-import dev.kangmin.pawpal.domain.DogBreed.DogBreed;
-import dev.kangmin.pawpal.domain.DogBreed.dto.DogBreedInfoDto;
-import dev.kangmin.pawpal.domain.DogBreed.repository.DogBreedRepository;
+import dev.kangmin.pawpal.domain.dogbreed.DogBreed;
+import dev.kangmin.pawpal.domain.dogbreed.dto.DogBreedInfoDto;
+import dev.kangmin.pawpal.domain.dogbreed.repository.DogBreedRepository;
 import dev.kangmin.pawpal.global.error.exception.CustomException;
-import dev.kangmin.pawpal.global.error.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

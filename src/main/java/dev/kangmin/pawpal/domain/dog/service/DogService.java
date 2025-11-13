@@ -1,7 +1,7 @@
 package dev.kangmin.pawpal.domain.dog.service;
 
-import dev.kangmin.pawpal.domain.DogBreed.DogBreed;
-import dev.kangmin.pawpal.domain.DogBreed.service.DogBreedService;
+import dev.kangmin.pawpal.domain.dogbreed.DogBreed;
+import dev.kangmin.pawpal.domain.dogbreed.service.DogBreedService;
 import dev.kangmin.pawpal.domain.dog.Dog;
 import dev.kangmin.pawpal.domain.dog.dto.*;
 import dev.kangmin.pawpal.domain.dog.repository.DogRepository;

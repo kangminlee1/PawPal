@@ -1,4 +1,4 @@
-package dev.kangmin.pawpal.domain.DogBreed.dto;
+package dev.kangmin.pawpal.domain.dogbreed.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

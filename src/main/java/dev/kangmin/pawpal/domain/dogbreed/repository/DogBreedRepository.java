@@ -1,7 +1,7 @@
-package dev.kangmin.pawpal.domain.DogBreed.repository;
+package dev.kangmin.pawpal.domain.dogbreed.repository;
 
-import dev.kangmin.pawpal.domain.DogBreed.DogBreed;
-import dev.kangmin.pawpal.domain.DogBreed.repository.querydsl.DogBreedRepositoryCustom;
+import dev.kangmin.pawpal.domain.dogbreed.DogBreed;
+import dev.kangmin.pawpal.domain.dogbreed.repository.querydsl.DogBreedRepositoryCustom;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

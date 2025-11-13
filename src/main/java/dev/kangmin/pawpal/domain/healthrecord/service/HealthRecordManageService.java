@@ -1,6 +1,5 @@
 package dev.kangmin.pawpal.domain.healthrecord.service;
 
-import dev.kangmin.pawpal.domain.DogBreed.DogBreed;
 import dev.kangmin.pawpal.domain.dog.Dog;
 import dev.kangmin.pawpal.domain.dog.service.DogService;
 import dev.kangmin.pawpal.domain.healthrecord.HealthRecord;

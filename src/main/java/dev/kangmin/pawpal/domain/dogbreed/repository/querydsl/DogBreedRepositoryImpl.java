@@ -1,15 +1,15 @@
-package dev.kangmin.pawpal.domain.DogBreed.repository.querydsl;
+package dev.kangmin.pawpal.domain.dogbreed.repository.querydsl;
 
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import dev.kangmin.pawpal.domain.DogBreed.DogBreed;
-import dev.kangmin.pawpal.domain.DogBreed.dto.DogBreedInfoDto;
+import dev.kangmin.pawpal.domain.dogbreed.QDogBreed;
+import dev.kangmin.pawpal.domain.dogbreed.dto.DogBreedInfoDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-import static dev.kangmin.pawpal.domain.DogBreed.QDogBreed.dogBreed;
+import static dev.kangmin.pawpal.domain.dogbreed.QDogBreed.dogBreed;
 
 @Repository
 @RequiredArgsConstructor
