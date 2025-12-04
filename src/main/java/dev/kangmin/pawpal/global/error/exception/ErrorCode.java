@@ -48,6 +48,11 @@ public enum ErrorCode {
     //메일
     SEND_MAIL_ERROR("메일 발송 중 오류 발생."),
 
+    //산책 관련
+    WALK_IS_NOT_EXISTS("산책 정보가 존재하지 않습니다."),
+    WALK_OWNER_MISMATCH("사용자의 선택한 강아지가 다릅니다."),
+    WALK_DOG_MISMATCH("산책한 강아지와 다릅니다."),
+
     //견종 관련
     DOG_BREED_IS_NOT_EXISTS("해당 견종은 존재하지 않습니다.");
 

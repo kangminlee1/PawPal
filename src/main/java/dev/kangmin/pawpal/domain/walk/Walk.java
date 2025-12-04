@@ -23,8 +23,12 @@ public class Walk {
 
     //이동 시간
     private Long duration;
+    //사용자 정의 이동 시간 추가 예정
+
     //이동 거리
     private Double distance;
+    //사용자 정의 이동 거리 추가 예정
+
     //시작점
     private String startPoint;
     //도착점
