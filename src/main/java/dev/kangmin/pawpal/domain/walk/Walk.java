@@ -1,9 +1,12 @@
 package dev.kangmin.pawpal.domain.walk;
 
 import dev.kangmin.pawpal.domain.dog.Dog;
+import dev.kangmin.pawpal.domain.walk.dto.WalkModifyDto;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.cglib.core.Local;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
 
@@ -20,6 +23,8 @@ public class Walk {
 
     @CreatedDate
     private LocalDateTime createDate;
+    @LastModifiedDate
+    private LocalDateTime updateDate;
 
     //이동 시간
     private Long duration;
@@ -38,4 +43,11 @@ public class Walk {
     @JoinColumn(name = "dogId")
     private Dog dog;
 
+
+    public void modify(WalkModifyDto modifyDto) {
+        this.duration = modifyDto.getDuration();
+        this.distance = modifyDto.getDistance();
+        this.startPoint = modifyDto.getStartPoint();
+        this.endPoint = modifyDto.getEndPoint();
+    }
 }

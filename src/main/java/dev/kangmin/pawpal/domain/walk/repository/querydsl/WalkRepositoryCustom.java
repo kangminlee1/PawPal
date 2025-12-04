@@ -8,6 +8,10 @@ public interface WalkRepositoryCustom {
 
     Optional<Walk> findByWalkId(Long walkId);
 
+    Optional<Walk> findByWalkIdAndMemberId(Long walkId, Long memberId);
+
     void deleteByWalkId(Long walkId);
+
+
 
 }

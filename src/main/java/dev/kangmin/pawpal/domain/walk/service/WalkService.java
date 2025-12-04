@@ -4,18 +4,19 @@ import dev.kangmin.pawpal.domain.dog.Dog;
 import dev.kangmin.pawpal.domain.dog.service.DogService;
 import dev.kangmin.pawpal.domain.member.Member;
 import dev.kangmin.pawpal.domain.walk.Walk;
-import dev.kangmin.pawpal.domain.walk.dto.WalkDetailDto;
-import dev.kangmin.pawpal.domain.walk.dto.WalkGenerateDto;
-import dev.kangmin.pawpal.domain.walk.dto.WalkInfoDto;
+import dev.kangmin.pawpal.domain.walk.dto.*;
 import dev.kangmin.pawpal.domain.walk.repository.WalkRepository;
 import dev.kangmin.pawpal.domain.walk.repository.querydsl.WalkRepositoryCustom;
 import dev.kangmin.pawpal.global.error.exception.CustomException;
 import dev.kangmin.pawpal.global.error.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cglib.core.Local;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
 
 import static dev.kangmin.pawpal.global.error.exception.ErrorCode.*;
 import static org.springframework.http.HttpStatus.*;
@@ -75,8 +76,16 @@ public class WalkService {
     }
 
     //산책 정보 수정
+    public void modifiedWalkInfo(Member member, WalkModifyDto walkModifyDto) {
+        Walk walk = findByWalkIdAndMemberId(walkModifyDto.getWalkId(), member.getMemberId());
+        walk.modify(walkModifyDto);
+    }
 
     //산책 세부 정보
+    public WalkDetailDto getWalKDetails(Member member, Long walkId) {
+        Walk walk = findByWalkIdAndMemberId(walkId, member.getMemberId());
+        return WalkDetailDto.of(walk);
+    }
 
 
     //정보 찾기 ------------
@@ -85,10 +94,19 @@ public class WalkService {
                 .orElseThrow(() -> new CustomException(BAD_REQUEST, WALK_IS_NOT_EXISTS));
     }
 
+    public Walk findByWalkIdAndMemberId(Long walkId, Long memberId) {
+        return walkRepository.findByWalkIdAndMemberId(walkId, memberId)
+                .orElseThrow(() -> new CustomException(BAD_REQUEST, WALK_OWNER_MISMATCH));
+    }
 
     //통계 -------------
 
-    //한 달 산책 횟수
+    //이번달 산책 횟수
+    public WalkStatisticsDto getMonthWalkStatisticsCount(Member member) {
+
+
+        return
+    }
 
     //총 거리
 
