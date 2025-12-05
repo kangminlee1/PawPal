@@ -26,6 +26,8 @@ public class Walk {
     @LastModifiedDate
     private LocalDateTime updateDate;
 
+    //산책 시작 시간
+    private LocalDateTime startTime;
     //이동 시간
     private Long duration;
     //사용자 정의 이동 시간 추가 예정

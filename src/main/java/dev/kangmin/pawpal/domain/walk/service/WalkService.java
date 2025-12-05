@@ -4,22 +4,24 @@ import dev.kangmin.pawpal.domain.dog.Dog;
 import dev.kangmin.pawpal.domain.dog.service.DogService;
 import dev.kangmin.pawpal.domain.member.Member;
 import dev.kangmin.pawpal.domain.walk.Walk;
-import dev.kangmin.pawpal.domain.walk.dto.*;
+import dev.kangmin.pawpal.domain.walk.dto.WalkDetailDto;
+import dev.kangmin.pawpal.domain.walk.dto.WalkGenerateDto;
+import dev.kangmin.pawpal.domain.walk.dto.WalkModifyDto;
+import dev.kangmin.pawpal.domain.walk.dto.WalkStatisticsDto;
 import dev.kangmin.pawpal.domain.walk.repository.WalkRepository;
-import dev.kangmin.pawpal.domain.walk.repository.querydsl.WalkRepositoryCustom;
 import dev.kangmin.pawpal.global.error.exception.CustomException;
-import dev.kangmin.pawpal.global.error.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cglib.core.Local;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 import static dev.kangmin.pawpal.global.error.exception.ErrorCode.*;
-import static org.springframework.http.HttpStatus.*;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.FORBIDDEN;
 
 @Service
 @Slf4j
@@ -100,19 +102,17 @@ public class WalkService {
     }
 
     //통계 -------------
+    //이번달 산책 횟수, 총 거리, 평균 산책 시간 , 산책 시간대 패턴, 등 :     // 주간/월간 리포트(차트용 데이터)
+    public WalkStatisticsDto getMonthWalkStatisticsCount(Member member, Long dogId) {
+        LocalDate now = LocalDate.now();
+        LocalDate firstDate = now.withDayOfMonth(1);
+        LocalDate lastDate = now.withDayOfMonth(now.lengthOfMonth());
 
-    //이번달 산책 횟수
-    public WalkStatisticsDto getMonthWalkStatisticsCount(Member member) {
+        LocalDateTime start = firstDate.atStartOfDay();
+        LocalDateTime end = lastDate.atTime(LocalTime.MAX);
 
-
-        return
+        return walkRepository.findWalksByOwnerAndDogWithinPeriod(member.getMemberId(), dogId, start, end);
     }
-
-    //총 거리
-
-    //평균 산책 시간
-
-    // 주간/월간 리포트(차트용 데이터)
 
     //과거 대비 변화
 
